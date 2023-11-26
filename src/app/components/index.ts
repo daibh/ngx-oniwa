@@ -1,0 +1,1 @@
+export * from './pdf-example/pdf-example.component';

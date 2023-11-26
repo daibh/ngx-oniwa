@@ -2,13 +2,26 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "paths": {
+      "@oniwa/cdk/*": [
+        "./dist/oniwa/cdk/*"
+      ],
+      "@oniwa/cdk": [
+        "./dist/oniwa/cdk"
+      ],
+      "@oniwa/pdf": [
+        "./dist/oniwa/pdf"
+      ]
+    },
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "allowJs": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "strictPropertyInitialization": false,
     "esModuleInterop": true,
     "sourceMap": true,
     "declaration": false,
