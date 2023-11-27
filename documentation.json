@@ -66,7 +66,7 @@
         },
         {
             "name": "PdfExampleComponent",
-            "id": "component-PdfExampleComponent-01dc92c8ed6eb8587e883f75a29dc2b5595bf811dd4005fe14bb552d6fe8823a575114669fcf7c03ce7e4126c177304723157caf67da01c94e14309369b83d8e",
+            "id": "component-PdfExampleComponent-a2f7814ec9b5a9c9fddbe28fd90291d5c089ebe70c8b0bcbfe18b03b14219559c7a71e366b5c940a5b0ff809bb1ecc4c410ffc995dc1117e0b87c1da3bd6c6e1",
             "file": "src/app/components/pdf-example/pdf-example.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -88,7 +88,7 @@
                     "name": "heavySrc",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 19,
+                    "line": 21,
                     "type": "string",
                     "decorators": []
                 },
@@ -96,7 +96,7 @@
                     "name": "lightSrc",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 18,
+                    "line": 20,
                     "type": "string",
                     "decorators": []
                 }
@@ -110,7 +110,7 @@
                     "type": "string",
                     "optional": false,
                     "description": "",
-                    "line": 21
+                    "line": 23
                 }
             ],
             "methodsClass": [
@@ -120,7 +120,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 23,
+                    "line": 25,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -140,6 +140,10 @@
                     "type": "component"
                 },
                 {
+                    "name": "PdfThumbnailComponent",
+                    "type": "component"
+                },
+                {
                     "name": "FormsModule",
                     "type": "module"
                 }
@@ -147,11 +151,11 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, Input, OnInit } from '@angular/core';\r\nimport { CommonModule } from '@angular/common';\r\nimport { PdfComponent } from '@daibh/pdf';\r\nimport { FormsModule } from '@angular/forms';\r\n\r\n@Component({\r\n  selector: 'storybook-pdf-viewer-example',\r\n  templateUrl: './pdf-example.component.html',\r\n  styleUrls: ['./pdf-example.component.scss'],\r\n  standalone: true,\r\n  imports: [\r\n    CommonModule,\r\n    PdfComponent,\r\n    FormsModule\r\n  ]\r\n})\r\nexport class PdfExampleComponent implements OnInit {\r\n  @Input() lightSrc: string;\r\n  @Input() heavySrc: string;\r\n  \r\n  pdfSrc: string;\r\n\r\n  ngOnInit(): void {\r\n    this.pdfSrc = this.lightSrc;\r\n  }\r\n}\r\n",
+            "sourceCode": "import { Component, Input, OnInit } from '@angular/core';\r\nimport { CommonModule } from '@angular/common';\r\nimport { PdfComponent } from '@daibh/pdf';\r\nimport { PdfThumbnailComponent } from '@daibh/pdf/components';\r\nimport { FormsModule } from '@angular/forms';\r\n\r\n@Component({\r\n  selector: 'storybook-pdf-viewer-example',\r\n  templateUrl: './pdf-example.component.html',\r\n  styleUrls: ['./pdf-example.component.scss'],\r\n  standalone: true,\r\n  imports: [\r\n    CommonModule,\r\n    PdfComponent,\r\n    PdfThumbnailComponent,\r\n    FormsModule\r\n  ]\r\n})\r\nexport class PdfExampleComponent implements OnInit {\r\n  @Input() lightSrc: string;\r\n  @Input() heavySrc: string;\r\n\r\n  pdfSrc: string;\r\n\r\n  ngOnInit(): void {\r\n    this.pdfSrc = this.lightSrc;\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": "",
+                    "data": ".wrapper {\r\n  display: flex;\r\n  flex-direction: row;\r\n\r\n  .pdf-viewer {\r\n    position: relative;\r\n    width: 100%;\r\n  }\r\n\r\n  .pdf-viewer-thumbnail {\r\n    flex: 1 0 auto;\r\n    flex-basis: 160px;\r\n    max-height: 100vh;\r\n    overflow-y: auto;\r\n    display: flex;\r\n    justify-content: center;\r\n    background-color: rgb(245, 246, 247);\r\n  }\r\n}",
                     "styleUrl": "./pdf-example.component.scss"
                 }
             ],
@@ -160,7 +164,7 @@
             "implements": [
                 "OnInit"
             ],
-            "templateData": "<div class=\"wrapper\">\r\n  <div class=\"pdf-viewer\">\r\n    <ngx-pdf [src]=\"pdfSrc\"></ngx-pdf>\r\n  </div>\r\n</div>"
+            "templateData": "<div class=\"wrapper\">\r\n  <div class=\"pdf-viewer\">\r\n    <ngx-pdf [src]=\"pdfSrc\"></ngx-pdf>\r\n  </div>\r\n  <div class=\"pdf-viewer-thumbnail\">\r\n    <ngx-pdf-thumbnail></ngx-pdf-thumbnail>\r\n  </div>\r\n</div>"
         }
     ],
     "modules": [],

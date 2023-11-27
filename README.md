@@ -1,27 +1,87 @@
-# daibh
+# Angular PDF Viewer
+This library was generated with Angular CLI version 17.0.0
+The goal of creating this library to facilitate manipulation with pdf.js on the Angular framework.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.3.
+### Features
+- ✨Convert all BUS and DOM events to Observable
+- ✨Easier to manipulate and customize by typescript code
+- ✨Structure of code more clean
 
-## Development server
+### Dependencies:
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- [PDF.JS](https://github.com/mozilla/pdf.js) - PDF Reader in JavaScript
+- [Angular](https://angular.dev/) - Awesome typescript-based framework easier to develop application
+- [@daibh/cdk](https://www.npmjs.com/package/@daibh/cdk) - Library include some function support to develop this library.
 
-## Code scaffolding
+### Installation
+Install the dependencies and devDependencies and start the server.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```sh
+npm install @daibh/pdf --save
+```
 
-## Build
+### Dependencies versions
+| Library | Version |
+| ------ | ------ |
+| Angular | [17.0.0](https://github.com/angular/angular/releases/tag/17.0.0) |
+| Pdf.js | [v3.8.162](https://github.com/mozilla/pdf.js/releases/tag/v3.8.162) |
+| @daibh/cdk | [v0.0.1](https://www.npmjs.com/package/@daibh/cdk/v/0.0.1) |
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### How it work?
 
-## Running unit tests
+```ts
+import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { PdfComponent } from '@daibh/pdf';
+import { PdfThumbnailComponent } from '@daibh/pdf/components';
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+@Component({
+  selector: 'storybook-pdf-viewer-example',
+  template: `
+    <div class="wrapper">
+      <div class="pdf-viewer">
+        <ngx-pdf [src]="pdfSrc"></ngx-pdf>
+      </div>
+      <div class="pdf-viewer-thumbnail">
+        <ngx-pdf-thumbnail></ngx-pdf-thumbnail>
+      </div>
+    </div>
+  `,
+  styles: [`
+    .wrapper {
+      display: flex;
+      flex-direction: row;
 
-## Running end-to-end tests
+      .pdf-viewer {
+        position: relative;
+        width: 100%;
+      }
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+      .pdf-viewer-thumbnail {
+        flex: 1 0 auto;
+        flex-basis: 160px;
+        max-height: 100vh;
+        overflow-y: auto;
+        display: flex;
+        justify-content: center;
+        background-color: rgb(245, 246, 247);
+      }
+    }
+  `],
+  standalone: true,
+  imports: [
+    CommonModule,
+    PdfComponent,
+    PdfThumbnailComponent
+  ]
+})
+export class PdfExampleComponent {
+  @Input() pdfSrc: string;
+}
+```
 
-## Further help
+## License
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+MIT
+
+**Free Software, Bless you all!**
