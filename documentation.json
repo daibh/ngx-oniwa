@@ -9,7 +9,7 @@
     "components": [
         {
             "name": "AppComponent",
-            "id": "component-AppComponent-b61b239452359a3960b30cf05a900d42b80fada9969bf12281334ddeee62b0b5ef3cdb974405837969f02133a2906df173e54f1e3b36448a8b5b3361e4aa0777",
+            "id": "component-AppComponent-4f4998104c62ef6a19af2aab03e8aa9d4e661550fd41f5a428b741f499f9597cff89369f908b722844ea98f37d6c99e2e11aa5ed68ecab942cdc067e64a72a25",
             "file": "src/app/app.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -29,7 +29,7 @@
             "propertiesClass": [
                 {
                     "name": "title",
-                    "defaultValue": "'oniwa'",
+                    "defaultValue": "'daibh'",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "string",
@@ -56,7 +56,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { RouterOutlet } from '@angular/router';\n\n@Component({\n  selector: 'app-root',\n  standalone: true,\n  imports: [CommonModule, RouterOutlet],\n  templateUrl: './app.component.html',\n  styleUrl: './app.component.scss'\n})\nexport class AppComponent {\n  title = 'oniwa';\n}\n",
+            "sourceCode": "import { Component } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { RouterOutlet } from '@angular/router';\n\n@Component({\n  selector: 'app-root',\n  standalone: true,\n  imports: [CommonModule, RouterOutlet],\n  templateUrl: './app.component.html',\n  styleUrl: './app.component.scss'\n})\nexport class AppComponent {\n  title = 'daibh';\n}\n",
             "styleUrl": "./app.component.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -66,7 +66,7 @@
         },
         {
             "name": "PdfExampleComponent",
-            "id": "component-PdfExampleComponent-5b276a70576d7d6731726f95c0a0fd8307a3b6f7fd2631aabe3fd084dc6564e13a54263ae7ab1af0d9180a98d0b8265a78f9b07131d69eb378bf31b5691cd9b0",
+            "id": "component-PdfExampleComponent-01dc92c8ed6eb8587e883f75a29dc2b5595bf811dd4005fe14bb552d6fe8823a575114669fcf7c03ce7e4126c177304723157caf67da01c94e14309369b83d8e",
             "file": "src/app/components/pdf-example/pdf-example.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -147,7 +147,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, Input, OnInit } from '@angular/core';\r\nimport { CommonModule } from '@angular/common';\r\nimport { PdfComponent } from '@oniwa/pdf';\r\nimport { FormsModule } from '@angular/forms';\r\n\r\n@Component({\r\n  selector: 'storybook-pdf-viewer-example',\r\n  templateUrl: './pdf-example.component.html',\r\n  styleUrls: ['./pdf-example.component.scss'],\r\n  standalone: true,\r\n  imports: [\r\n    CommonModule,\r\n    PdfComponent,\r\n    FormsModule\r\n  ]\r\n})\r\nexport class PdfExampleComponent implements OnInit {\r\n  @Input() lightSrc: string;\r\n  @Input() heavySrc: string;\r\n  \r\n  pdfSrc: string;\r\n\r\n  ngOnInit(): void {\r\n    this.pdfSrc = this.lightSrc;\r\n  }\r\n}\r\n",
+            "sourceCode": "import { Component, Input, OnInit } from '@angular/core';\r\nimport { CommonModule } from '@angular/common';\r\nimport { PdfComponent } from '@daibh/pdf';\r\nimport { FormsModule } from '@angular/forms';\r\n\r\n@Component({\r\n  selector: 'storybook-pdf-viewer-example',\r\n  templateUrl: './pdf-example.component.html',\r\n  styleUrls: ['./pdf-example.component.scss'],\r\n  standalone: true,\r\n  imports: [\r\n    CommonModule,\r\n    PdfComponent,\r\n    FormsModule\r\n  ]\r\n})\r\nexport class PdfExampleComponent implements OnInit {\r\n  @Input() lightSrc: string;\r\n  @Input() heavySrc: string;\r\n  \r\n  pdfSrc: string;\r\n\r\n  ngOnInit(): void {\r\n    this.pdfSrc = this.lightSrc;\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
@@ -160,7 +160,7 @@
             "implements": [
                 "OnInit"
             ],
-            "templateData": "<div class=\"wrapper\">\r\n  <div class=\"pdf-viewer\">\r\n    <nw-pdf [src]=\"pdfSrc\"></nw-pdf>\r\n  </div>\r\n</div>"
+            "templateData": "<div class=\"wrapper\">\r\n  <div class=\"pdf-viewer\">\r\n    <ngx-pdf [src]=\"pdfSrc\"></ngx-pdf>\r\n  </div>\r\n</div>"
         }
     ],
     "modules": [],

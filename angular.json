@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "oniwa": {
+    "daibh": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/oniwa",
+            "outputPath": "dist/daibh",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -62,10 +62,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "oniwa:build:production"
+              "buildTarget": "daibh:build:production"
             },
             "development": {
-              "buildTarget": "oniwa:build:development"
+              "buildTarget": "daibh:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -73,7 +73,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "oniwa:build"
+            "buildTarget": "daibh:build"
           }
         },
         "test": {
@@ -99,7 +99,7 @@
           "builder": "@storybook/angular:start-storybook",
           "options": {
             "configDir": ".storybook",
-            "browserTarget": "oniwa:build",
+            "browserTarget": "daibh:build",
             "compodoc": true,
             "compodocArgs": [
               "-e",
@@ -114,7 +114,7 @@
           "builder": "@storybook/angular:build-storybook",
           "options": {
             "configDir": ".storybook",
-            "browserTarget": "oniwa:build",
+            "browserTarget": "daibh:build",
             "compodoc": true,
             "compodocArgs": [
               "-e",
@@ -127,23 +127,23 @@
         }
       }
     },
-    "@oniwa/cdk": {
+    "@daibh/cdk": {
       "projectType": "library",
-      "root": "projects/oniwa/cdk",
-      "sourceRoot": "projects/oniwa/cdk/src",
+      "root": "projects/daibh/cdk",
+      "sourceRoot": "projects/daibh/cdk/src",
       "prefix": "nw",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "project": "projects/oniwa/cdk/ng-package.json"
+            "project": "projects/daibh/cdk/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/oniwa/cdk/tsconfig.lib.prod.json"
+              "tsConfig": "projects/daibh/cdk/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/oniwa/cdk/tsconfig.lib.json"
+              "tsConfig": "projects/daibh/cdk/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -151,7 +151,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "tsConfig": "projects/oniwa/cdk/tsconfig.spec.json",
+            "tsConfig": "projects/daibh/cdk/tsconfig.spec.json",
             "polyfills": [
               "zone.js",
               "zone.js/testing"
@@ -160,23 +160,23 @@
         }
       }
     },
-    "@oniwa/pdf": {
+    "@daibh/pdf": {
       "projectType": "library",
-      "root": "projects/oniwa/pdf",
-      "sourceRoot": "projects/oniwa/pdf/src",
+      "root": "projects/daibh/pdf",
+      "sourceRoot": "projects/daibh/pdf/src",
       "prefix": "nw",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "project": "projects/oniwa/pdf/ng-package.json"
+            "project": "projects/daibh/pdf/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/oniwa/pdf/tsconfig.lib.prod.json"
+              "tsConfig": "projects/daibh/pdf/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/oniwa/pdf/tsconfig.lib.json"
+              "tsConfig": "projects/daibh/pdf/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -184,7 +184,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "tsConfig": "projects/oniwa/pdf/tsconfig.spec.json",
+            "tsConfig": "projects/daibh/pdf/tsconfig.spec.json",
             "polyfills": [
               "zone.js",
               "zone.js/testing"

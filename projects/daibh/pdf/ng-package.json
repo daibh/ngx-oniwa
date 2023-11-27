@@ -1,11 +1,11 @@
 {
   "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../../dist/oniwa/pdf",
+  "dest": "../../../dist/daibh/pdf",
   "lib": {
     "entryFile": "src/public-api.ts"
   },
   "allowedNonPeerDependencies": [
-    "@oniwa/cdk",
+    "@daibh/cdk",
     "pdfjs-dist"
   ]
 }

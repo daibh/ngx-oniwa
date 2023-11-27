@@ -3,14 +3,17 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "@oniwa/cdk/*": [
-        "./dist/oniwa/cdk/*"
+      "@daibh/cdk/*": [
+        "./dist/daibh/cdk/*"
       ],
-      "@oniwa/cdk": [
-        "./dist/oniwa/cdk"
+      "@daibh/cdk": [
+        "./dist/daibh/cdk"
       ],
-      "@oniwa/pdf": [
-        "./dist/oniwa/pdf"
+      "@daibh/pdf/*": [
+        "./dist/daibh/pdf/*"
+      ],
+      "@daibh/pdf": [
+        "./dist/daibh/pdf"
       ]
     },
     "outDir": "./dist/out-tsc",

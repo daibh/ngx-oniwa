@@ -1,6 +1,6 @@
 {
   "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../../dist/oniwa/cdk",
+  "dest": "../../../dist/daibh/cdk",
   "lib": {
     "entryFile": "./public-api.ts"
   }

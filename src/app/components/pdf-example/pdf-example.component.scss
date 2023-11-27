@@ -1,0 +1,19 @@
+.wrapper {
+  display: flex;
+  flex-direction: row;
+
+  .pdf-viewer {
+    position: relative;
+    width: 100%;
+  }
+
+  .pdf-viewer-thumbnail {
+    flex: 1 0 auto;
+    flex-basis: 160px;
+    max-height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    background-color: rgb(245, 246, 247);
+  }
+}

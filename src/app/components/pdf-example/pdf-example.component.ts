@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PdfComponent } from '@oniwa/pdf';
+import { PdfComponent } from '@daibh/pdf';
+import { PdfThumbnailComponent } from '@daibh/pdf/components';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -11,13 +12,14 @@ import { FormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     PdfComponent,
+    PdfThumbnailComponent,
     FormsModule
   ]
 })
 export class PdfExampleComponent implements OnInit {
   @Input() lightSrc: string;
   @Input() heavySrc: string;
-  
+
   pdfSrc: string;
 
   ngOnInit(): void {

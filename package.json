@@ -1,18 +1,36 @@
 {
-  "name": "oniwa",
+  "name": "daibh",
   "version": "0.0.0",
+  "author": {
+    "name": "daibh",
+    "email": "oniwa1102@gmail.com",
+    "url": "https://oniwa.net"
+  },
+  "keywords": [
+    "angular",
+    "daibh",
+    "pdf",
+    "pdfjs",
+    "@daibh/cdk",
+    "@daibh/pdf"
+  ],
+  "description": "Angular library support some feature on development",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/daibh/ngx-oniwa"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build:cdk": "ng build @oniwa/cdk",
-    "build:pdf": "ng build @oniwa/pdf",
+    "build:cdk": "ng build @daibh/cdk",
+    "build:pdf": "ng build @daibh/pdf",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "storybook": "ng run oniwa:storybook",
-    "build-storybook": "ng run oniwa:build-storybook"
+    "storybook": "ng run daibh:storybook",
+    "build-storybook": "ng run daibh:build-storybook"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "@angular/animations": "^17.0.0",
     "@angular/common": "^17.0.0",

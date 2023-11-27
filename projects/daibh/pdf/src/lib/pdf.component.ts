@@ -7,11 +7,11 @@ import { Observable, Subject, fromEvent, map, pairwise, switchMap, takeUntil, ta
 import { PDFDocumentProxy } from 'pdfjs-dist';
 import { AnnotationEditorType, AnnotationMode, Cursor, IPdfConfig, ScrollMode, TextLayerMode } from './models/pdf.model';
 import { PdfService } from './services/pdf.service';
-import { isDefined } from '@oniwa/cdk/operators';
+import { isDefined } from '@daibh/cdk/operators';
 import { IPdfEvent, IntenalEvent, LoadEvent, PageEvent, ResourceEvent, RotationEvent, ViewModeEvent, ZoomEvent } from './models/event.model';
 
 const { loadingProgress, sourceNotFound, documentloaded } = LoadEvent;
-const { loadSource, pageRender, pageRendered, setZones } = IntenalEvent;
+const { loadSource, pageRender, pageRendered, thumbnailRendered } = IntenalEvent;
 const { prevPage, nextPage, gotoPage, pageChanged, } = PageEvent;
 const { switchScrollMode, scrollModeChanged, switchCursor, cursorChanged } = ViewModeEvent;
 const { zoomIn, zoomOut, zoomChanged } = ZoomEvent;
@@ -27,7 +27,7 @@ const defaultInitConfig: IPdfConfig = {
 };
 
 @Component({
-  selector: 'nw-pdf',
+  selector: 'ngx-pdf',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -121,11 +121,17 @@ export class PdfComponent implements OnInit, OnChanges {
       takeUntil(this._destroySubject$),
       tap(details => this._service.dispatch({ name: pageRendered, details }))
     ).subscribe();
+
+    fromEvent<{ source: PDFPageView, pageNumber: number, pdfPage: unknown }>(this._eventBus, 'thumbnailrendered').pipe(
+      takeUntil(this._destroySubject$),
+      tap(details => this._service.dispatch({ name: thumbnailRendered, details }))
+    ).subscribe();
   }
 
   private observeEvents(): void {
     this.events$.pipe(
       tap(async ({ name, details }) => {
+        console.log('observeEvents', name, details);
         switch (name) {
           case loadSource:
             const { src } = details;
@@ -212,7 +218,7 @@ export class PdfComponent implements OnInit, OnChanges {
       this._downloadComplete = true;
 
       this._viewer.firstPagePromise!.then(() => {
-        this._service.dispatch({ name: documentloaded, details: { source: this } });
+        this._service.dispatch({ name: documentloaded, details: { source: this, pageCount: pdfDocument.numPages, pdfDocument } });
         this._service.dispatch({ name: pageChanged, details: { page: this._linkService.page } });
       });
     }).catch((reason: unknown) => {
