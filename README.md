@@ -80,6 +80,8 @@ export class PdfExampleComponent {
 }
 ```
 
+Hey 👋 If it's useful for you. You can now [buy me a coffee!](https://www.buymeacoffee.com/oniwa1102s) ^^!
+
 ## License
 
 MIT
