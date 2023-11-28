@@ -1,39 +1,25 @@
 import { CommonModule } from "@angular/common";
-import { Component, OnDestroy, OnInit, inject } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit, inject } from "@angular/core";
 import { PdfService, LoadEvent, PageEvent } from '@daibh/pdf';
-import { Subject, from, tap } from "rxjs";
-import { PDFDocumentProxy } from 'pdfjs-dist';
+import { Subject, from, takeUntil, tap } from "rxjs";
+import { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist';
 import { isDefined } from "@daibh/cdk/operators";
 
-/**
- * Scale factors for the canvas, necessary with HiDPI displays.
- */
-class OutputScale {
-  sx: number;
-  sy: number;
-  constructor() {
-    const pixelRatio = window.devicePixelRatio || 1;
-
-    /**
-     * @type {number} Horizontal scale.
-     */
-    this.sx = pixelRatio;
-
-    /**
-     * @type {number} Vertical scale.
-     */
-    this.sy = pixelRatio;
-  }
-
-  /**
-   * @type {boolean} Returns `true` when scaling is required, `false` otherwise.
-   */
-  get scaled() {
-    return this.sx !== 1 || this.sy !== 1;
-  }
+interface IDocumentLoaded {
+  pageCount: number;
+  pdfDocument: PDFDocumentProxy;
 }
 
-const THUMBNAIL_WIDTH = 98; // px
+interface IPageInfo {
+  view: number[];
+}
+
+interface IDrawContext {
+  ctx: CanvasRenderingContext2D;
+  canvas: HTMLCanvasElement;
+  transform: number[] | null;
+}
+
 const DRAW_UPSCALE_FACTOR = 2;
 const MAX_NUM_SCALING_STEPS = 3;
 
@@ -43,46 +29,39 @@ const MAX_NUM_SCALING_STEPS = 3;
   imports: [CommonModule],
   template: `
     <ul>
-      <ng-template ngFor let-item [ngForOf]="thumbnails">
+      <ng-template ngFor let-item [ngForOf]="thumbnails" [ngForTrackBy]="trackBy"]>
         <li>
-          <a (click)="onThumbnailClicked(item.page)"><img [src]="item.thumbnailSrc" /></a>
+          <a [class.active]="currentPage === item.page" (click)="onThumbnailClicked(item.page)"><img [src]="item.thumbnailSrc" /></a>
         </li>
       </ng-template>
     </ul>
   `,
-  styles: [`
-    ul {
-      list-style-type: none;
-      padding: 0;
-    }
-
-    ul li {
-      margin: 20px;
-    }
-
-    ul li a {
-      text-decoration: none;
-      padding: 0;
-      margin: 0;
-      cursor: pointer;
-    }
-  `]
+  styleUrls: ['./thumbnail.component.scss']
 })
 export class PdfThumbnailComponent implements OnInit, OnDestroy {
   private readonly _destroySubject$ = new Subject<void>();
   private readonly _service = inject(PdfService);
+  private readonly _docLoaded$ = this._service.observe<IDocumentLoaded>(LoadEvent.documentloaded);
+  private readonly _pageChanged$ = this._service.observe<{ pageNumber: number }>(PageEvent.pageChanged);
   private readonly _thumbnails: { page: number, thumbnailSrc: string }[] = [];
+  private readonly _defaultWidth = 98;
+  private readonly _syncCurrentPage = ({ pageNumber }: { pageNumber: number }) => this._currentPage = pageNumber;
   private _tempCanvas: HTMLCanvasElement;
-  private _width: number;
-  private _height: number;
+  private _currentPage: number;
+  private _thumbWidth: number;
 
-  get width(): number {
+  readonly trackBy = (_: number, item: { page: number }) => item.page;
 
-    return this._width;
+  @Input() set thumbWidth(width: number) {
+    this._thumbWidth = width;
   }
 
-  get height(): number {
-    return this._height;
+  get thumbWidth(): number {
+    return this._thumbWidth ?? this._defaultWidth;
+  }
+
+  get currentPage(): number {
+    return this._currentPage || 1;
   }
 
   get thumbnails() {
@@ -98,135 +77,92 @@ export class PdfThumbnailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this._service.observe<{ pageCount: number, pdfDocument: PDFDocumentProxy }>(LoadEvent.documentloaded).pipe(
+    this._docLoaded$.pipe(
+      takeUntil(this._destroySubject$),
       tap(({ pageCount, pdfDocument }) => {
         const optionalContentConfigPromise = pdfDocument.getOptionalContentConfig();
-        for (let i = 0; i < pageCount; i++) {
-          const curr = i + 1;
-          from(pdfDocument.getPage(curr)).pipe(
-            tap(_page => {
 
-              if (!isDefined(this.width)) {
-                const { width, height } = _page.getViewport({ scale: 1 });
-                this._width = width;
-                this._height = height;
-              }
+        // to remove all of old thumbails.
+        this.thumbnails.length = 0;
 
-              const { width, height } = this;
-              const scale = THUMBNAIL_WIDTH / width;
-              const ratio = width / height;
-              const { ctx, canvas, transform } = this._getPageDrawContext(ratio, DRAW_UPSCALE_FACTOR);
-              const viewport = _page.getViewport({ scale: DRAW_UPSCALE_FACTOR * scale });
-              const renderContext = {
-                canvasContext: ctx,
-                transform,
-                viewport,
-                optionalContentConfigPromise,
-                pageColors: null,
-              };
-              _page.render(renderContext as any).promise.then(() => {
-                const reducedCanvas = this._reduceImage(canvas, ratio);
-                this._thumbnails.push({ page: curr, thumbnailSrc: reducedCanvas.toDataURL() })
-              });
-            })
-          ).subscribe();
-        }
+        const createThumbnail = (_page: PDFPageProxy) => {
+          const { view: [, , width, height] } = _page._pageInfo as IPageInfo;
+          const { ctx, canvas, transform } = this._getPageDrawContext(width / height, DRAW_UPSCALE_FACTOR);
+          const viewport = _page.getViewport({ scale: DRAW_UPSCALE_FACTOR * this.thumbWidth / width });
+
+          const renderContext = {
+            canvasContext: ctx,
+            transform,
+            viewport,
+            optionalContentConfigPromise,
+            pageColors: null,
+          };
+
+          const onRenderFinished = () => {
+            const reducedCanvas = this._reduceImage(canvas, width / height);
+            this._thumbnails.push({ page: _page.pageNumber, thumbnailSrc: reducedCanvas.toDataURL() });
+          }
+
+          _page.render(renderContext as any).promise.then(onRenderFinished);
+        };
+
+        Array.from({ length: pageCount }, (_, i) => i + 1)
+          .forEach(_pageNumber => from(pdfDocument.getPage(_pageNumber))
+            .pipe(tap(createThumbnail))
+            .subscribe()
+          );
+
       })
     ).subscribe();
+
+    this._pageChanged$.pipe(takeUntil(this._destroySubject$), tap(this._syncCurrentPage)).subscribe();
   }
 
-  private _getPageDrawContext(ratio: number, upscaleFactor = 1): { ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, transform: number[] | null } {
-    // Keep the no-thumbnail outline visible, i.e. `data-loaded === false`,
-    // until rendering/image conversion is complete, to avoid display issues.
+  private _getPageDrawContext(ratio: number, upscaleFactor = 1): IDrawContext {
     const canvas = document.createElement("canvas");
     const ctx: CanvasRenderingContext2D = canvas.getContext("2d", { alpha: false })!;
-    const outputScale = new OutputScale();
-    const canvasWidth = THUMBNAIL_WIDTH;
-    const canvasHeight = (THUMBNAIL_WIDTH / ratio) | 0;
+    const canvasWidth = this.thumbWidth;
+    const canvasHeight = (this.thumbWidth / ratio) | 0;
+    const pixelRatio = window.devicePixelRatio || 1;
+    const scaled = pixelRatio !== 1;
 
-    canvas.width = (upscaleFactor * canvasWidth * outputScale.sx) | 0;
-    canvas.height = (upscaleFactor * canvasHeight * outputScale.sy) | 0;
+    canvas.width = (upscaleFactor * canvasWidth) | 0;
+    canvas.height = (upscaleFactor * canvasHeight) | 0;
 
-    const transform = outputScale.scaled ? [outputScale.sx, 0, 0, outputScale.sy, 0, 0] : null;
-
-    return { ctx, canvas, transform };
+    return { ctx, canvas, transform: scaled ? [pixelRatio, 0, 0, pixelRatio, 0, 0] : null };
   }
 
-  private _reduceImage(imgCanvas: HTMLCanvasElement, ratio: number,) {
+  private _reduceImage(imgCanvas: HTMLCanvasElement, ratio: number): HTMLCanvasElement {
     const { ctx, canvas } = this._getPageDrawContext(ratio);
 
-    if (imgCanvas.width <= 2 * canvas.width) {
-      ctx.drawImage(
-        imgCanvas,
-        0,
-        0,
-        imgCanvas.width,
-        imgCanvas.height,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
+    if (imgCanvas.width <= DRAW_UPSCALE_FACTOR * canvas.width) {
+      ctx.drawImage(imgCanvas, 0, 0, imgCanvas.width, imgCanvas.height, 0, 0, canvas.width, canvas.height);
       return canvas;
     }
 
     // drawImage does an awful job of rescaling the image, doing it gradually.
     let reducedWidth = canvas.width << MAX_NUM_SCALING_STEPS;
     let reducedHeight = canvas.height << MAX_NUM_SCALING_STEPS;
-    const [reducedImage, reducedImageCtx] = this.getCanvas(
-      reducedWidth,
-      reducedHeight
-    );
+    const [reducedImage, reducedImageCtx] = this._getCanvas(reducedWidth, reducedHeight);
 
     while (reducedWidth > imgCanvas.width || reducedHeight > imgCanvas.height) {
       reducedWidth >>= 1;
       reducedHeight >>= 1;
     }
 
-    reducedImageCtx.drawImage(
-      imgCanvas,
-      0,
-      0,
-      imgCanvas.width,
-      imgCanvas.height,
-      0,
-      0,
-      reducedWidth,
-      reducedHeight
-    );
+    reducedImageCtx.drawImage(imgCanvas, 0, 0, imgCanvas.width, imgCanvas.height, 0, 0, reducedWidth, reducedHeight);
 
-    while (reducedWidth > 2 * canvas.width) {
-      reducedImageCtx.drawImage(
-        reducedImage,
-        0,
-        0,
-        reducedWidth,
-        reducedHeight,
-        0,
-        0,
-        reducedWidth >> 1,
-        reducedHeight >> 1
-      );
+    while (reducedWidth > DRAW_UPSCALE_FACTOR * canvas.width) {
+      reducedImageCtx.drawImage(reducedImage, 0, 0, reducedWidth, reducedHeight, 0, 0, reducedWidth >> 1, reducedHeight >> 1);
       reducedWidth >>= 1;
       reducedHeight >>= 1;
     }
 
-    ctx.drawImage(
-      reducedImage,
-      0,
-      0,
-      reducedWidth,
-      reducedHeight,
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-
+    ctx.drawImage(reducedImage, 0, 0, reducedWidth, reducedHeight, 0, 0, canvas.width, canvas.height);
     return canvas;
   }
 
-  private getCanvas(width: number, height: number): [HTMLCanvasElement, CanvasRenderingContext2D] {
+  private _getCanvas(width: number, height: number): [HTMLCanvasElement, CanvasRenderingContext2D] {
     const tempCanvas = this.tempCanvas;
     tempCanvas.width = width;
     tempCanvas.height = height;

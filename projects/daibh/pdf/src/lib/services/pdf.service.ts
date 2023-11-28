@@ -17,7 +17,7 @@ export class PdfService {
       // filter to exclude undefined or null values from observable
       filter(event => isDefined(event)) as OperatorFunction<IPdfEvent | undefined, IPdfEvent>,
       // share observe to multiple observable
-      share()
+      // share()
     );
   }
 

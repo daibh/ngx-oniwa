@@ -164,7 +164,7 @@
             "implements": [
                 "OnInit"
             ],
-            "templateData": "<div class=\"wrapper\">\r\n  <div class=\"pdf-viewer\">\r\n    <ngx-pdf [src]=\"pdfSrc\"></ngx-pdf>\r\n  </div>\r\n  <div class=\"pdf-viewer-thumbnail\">\r\n    <ngx-pdf-thumbnail></ngx-pdf-thumbnail>\r\n  </div>\r\n</div>"
+            "templateData": "<div class=\"wrapper\">\r\n  <div class=\"pdf-viewer-thumbnail\">\r\n    <ngx-pdf-thumbnail></ngx-pdf-thumbnail>\r\n  </div>\r\n  <div class=\"pdf-viewer\">\r\n    <ngx-pdf [src]=\"pdfSrc\"></ngx-pdf>\r\n  </div>\r\n</div>"
         }
     ],
     "modules": [],
