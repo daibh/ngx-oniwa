@@ -1,5 +1,5 @@
 
-export type PdfEvent = IntenalEvent | ResourceEvent | LoadEvent | ViewModeEvent | PageEvent | ZoomEvent | RotationEvent;
+export type PdfEvent = IntenalEvent | ResourceEvent | LoadEvent | ViewModeEvent | PageEvent | ZoomEvent | RotationEvent | AnotationEvent;
 export interface IPdfEvent {
   name: PdfEvent;
   details: Record<string, unknown>;
@@ -47,4 +47,9 @@ export enum IntenalEvent {
 export enum ResourceEvent {
   changeResource = 'changeResource',
   downloadResource = 'downloadResource'
+}
+
+export enum AnotationEvent {
+  createStamp = 'createStamp',
+  anotationChanged = 'anotationChanged'
 }

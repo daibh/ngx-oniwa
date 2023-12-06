@@ -15,6 +15,8 @@ export enum AnnotationEditorType {
   Disable = -1,
   None = 0,
   FreeText = 3,
+  Highlight = 9,
+  Stamp = 13,
   Ink = 15
 };
 

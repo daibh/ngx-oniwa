@@ -9,6 +9,9 @@
       "@daibh/cdk": [
         "./dist/daibh/cdk"
       ],
+      "@daibh/material": [
+        "./dist/daibh/material"
+      ],
       "@daibh/pdf/*": [
         "./dist/daibh/pdf/*"
       ],

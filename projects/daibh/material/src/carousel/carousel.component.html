@@ -1,0 +1,33 @@
+<div class="carousel carousel-dark slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <ng-template ngFor let-item let-idx="index" [ngForOf]="items">
+      <button [attr.aria-label]="item.title" type="button" (click)="onMoveToSlide(idx)"
+        [class.active]="idx === activatedIndex" [attr.aria-current]="idx === activatedIndex"></button>
+    </ng-template>
+  </div>
+  <div class="carousel-inner">
+    <ng-template ngFor let-item let-idx="index" [ngForOf]="items">
+      <ng-container [ngTemplateOutlet]="itemTpl"
+        [ngTemplateOutletContext]="{$implicit: item, index: idx }"></ng-container>
+    </ng-template>
+    <ng-template let-item let-index="index" #itemTpl>
+      <div class="carousel-item" [class.active]="index === activatedIndex">
+        <ng-template [ngIf]="item.image">
+          <img [src]="item.image" class="d-block m-auto" />
+        </ng-template>
+        <div class="carousel-caption">
+          <h5><a class="text-decoration-none" [href]="item.routeLink">{{item.title}}</a></h5>
+          <p></p>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+  <button class="carousel-control-prev" type="button" (click)="onPrevClicked()">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" (click)="onNextClicked()">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>

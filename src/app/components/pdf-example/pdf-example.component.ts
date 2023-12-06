@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PdfComponent } from '@daibh/pdf';
+import { AnotationEvent, PdfComponent, PdfService, ResourceEvent } from '@daibh/pdf';
 import { PdfThumbnailComponent } from '@daibh/pdf/components';
 import { FormsModule } from '@angular/forms';
+import { Subject, takeUntil, tap } from 'rxjs';
 
 @Component({
   selector: 'storybook-pdf-viewer-example',
@@ -17,6 +18,8 @@ import { FormsModule } from '@angular/forms';
   ]
 })
 export class PdfExampleComponent implements OnInit {
+  private readonly _pdfService = inject(PdfService);
+  private readonly _destroy$ = new Subject();
   @Input() lightSrc: string;
   @Input() heavySrc: string;
 
@@ -24,5 +27,15 @@ export class PdfExampleComponent implements OnInit {
 
   ngOnInit(): void {
     this.pdfSrc = this.lightSrc;
+    this._pdfService.observe(AnotationEvent.anotationChanged).pipe(
+      takeUntil(this._destroy$),
+      tap(_ => {
+        this._pdfService.dispatch({ name: ResourceEvent.downloadResource, details: {} });
+      })
+    ).subscribe();
+  }
+
+  onAddStamp(): void {
+    this._pdfService.dispatch({ name: AnotationEvent.createStamp, details: {} });
   }
 }

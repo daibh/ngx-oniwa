@@ -8,7 +8,7 @@ import { PDFDocumentProxy } from 'pdfjs-dist';
 import { AnnotationEditorType, AnnotationMode, Cursor, IPdfConfig, ScrollMode, TextLayerMode } from './models/pdf.model';
 import { PdfService } from './services/pdf.service';
 import { isDefined } from '@daibh/cdk/operators';
-import { IPdfEvent, IntenalEvent, LoadEvent, PageEvent, ResourceEvent, RotationEvent, ViewModeEvent, ZoomEvent } from './models/event.model';
+import { AnotationEvent, IPdfEvent, IntenalEvent, LoadEvent, PageEvent, ResourceEvent, RotationEvent, ViewModeEvent, ZoomEvent } from './models/event.model';
 
 const { loadingProgress, sourceNotFound, documentloaded } = LoadEvent;
 const { loadSource, pageRender, pageRendered, thumbnailRendered } = IntenalEvent;
@@ -17,13 +17,14 @@ const { switchScrollMode, scrollModeChanged, switchCursor, cursorChanged } = Vie
 const { zoomIn, zoomOut, zoomChanged } = ZoomEvent;
 const { rotateLeft, rotateRight, rotateChanged } = RotationEvent;
 const { downloadResource } = ResourceEvent;
+const { createStamp, anotationChanged } = AnotationEvent;
 
 const defaultInitConfig: IPdfConfig = {
   scrollMode: ScrollMode.Page,
   zoomScale: 1,
-  textLayerMode: TextLayerMode.Disable,
-  annotationMode: AnnotationMode.Disable,
-  annotationEditorMode: AnnotationEditorType.Disable
+  textLayerMode: TextLayerMode.Enable,
+  annotationMode: AnnotationMode.EnableStorage,
+  annotationEditorMode: AnnotationEditorType.None
 };
 
 @Component({
@@ -193,6 +194,18 @@ export class PdfComponent implements OnInit, OnChanges {
               hiddenLink.click();
               hiddenLink.remove();
             }
+            break;
+          case createStamp:
+            this._pdfDocument.annotationStorage.setValue('pdfjs_internal_editor_0', {
+              "annotationType": 3,
+              "color": [0, 0, 0],
+              "fontSize": 10,
+              "value": "Hello World",
+              "pageIndex": 0,
+              "rect": [67.5, 543, 119, 556.5],
+              "rotation": 0
+            });
+            this._service.dispatch({ name: anotationChanged, details: {} });
             break;
           default:
             break;

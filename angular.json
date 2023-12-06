@@ -192,6 +192,39 @@
           }
         }
       }
+    },
+    "@daibh/material": {
+      "projectType": "library",
+      "root": "projects/daibh/material",
+      "sourceRoot": "projects/daibh/material/src",
+      "prefix": "nw",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/daibh/material/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/daibh/material/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/daibh/material/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/daibh/material/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
     }
   }
 }
