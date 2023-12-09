@@ -12,7 +12,7 @@ import { CarouselComponent, ICarouselItem, NW_CAROUSEL_CONFIG } from "@daibh/mat
     CarouselComponent
   ],
   providers: [
-    { provide: NW_CAROUSEL_CONFIG, useValue: { height: '300px', automic: true } }
+    { provide: NW_CAROUSEL_CONFIG, useValue: { height: '300px', automic: false } }
   ],
   encapsulation: ViewEncapsulation.None
 })

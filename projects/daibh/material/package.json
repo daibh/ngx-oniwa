@@ -1,6 +1,6 @@
 {
   "name": "@daibh/material",
-  "version": "0.0.7",
+  "version": "1.4.0",
   "author": {
     "name": "daibh",
     "email": "oniwa1102@gmail.com",
@@ -22,7 +22,8 @@
   "peerDependencies": {
     "@angular/common": "^17.0.0",
     "@angular/core": "^17.0.0",
-    "bootstrap": "^5.3.2"
+    "bootstrap": "5.3.2",
+    "@daibh/cdk": "^0.0.4"
   },
   "dependencies": {
     "tslib": "^2.3.0"

@@ -13,7 +13,24 @@
     <ng-template let-item let-index="index" #itemTpl>
       <div class="carousel-item active" *ngIf="isActivated(index)">
         <ng-template [ngIf]="item.image">
-          <img [src]="item.image" class="d-block m-auto" />
+          @defer (on viewport) {
+          <img [src]="item.image" loading="lazy" class="d-block m-auto" />
+          } @placeholder(minimum 100ms) {
+          <div class="align-items-center d-flex h-100 justify-content-center">
+            <div class="spinner-border text-secondary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          } @loading {
+          <div class="align-items-center d-flex h-100 justify-content-center">
+            <div class="spinner-border text-secondary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          } @error {
+          <div></div>
+          }
+
         </ng-template>
         <div class="carousel-caption">
           <h5><a class="text-decoration-none" [href]="item.routeLink">{{item.title}}</a></h5>
