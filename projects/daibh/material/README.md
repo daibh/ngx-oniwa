@@ -1,24 +1,52 @@
-# Material
+# Angular Material
+This library was generated with Angular CLI version 17.0.0
+The goal of creating this library to create common dump component to reduce time to development on the Angular framework.
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.0.
+### Features
+- ✨Provide usage components
+- ✨Structure of code more clean
 
-## Code scaffolding
+### Dependencies:
+- [Angular](https://angular.dev/) - Awesome typescript-based framework easier to develop application
+- [@daibh/cdk](https://www.npmjs.com/package/@daibh/cdk) - Library include some function support to develop this library.
 
-Run `ng generate component component-name --project material` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project material`.
-> Note: Don't forget to add `--project material` or else it will be added to the default project in your `angular.json` file. 
+### Installation
+Install the dependencies and devDependencies and start the server.
 
-## Build
+```sh
+npm install @daibh/material --save
+```
 
-Run `ng build material` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Dependencies versions
+| Library | Version |
+| ------ | ------ |
+| Angular | [17.0.0](https://github.com/angular/angular/releases/tag/17.0.0) |
+| @daibh/cdk | [v0.0.1](https://www.npmjs.com/package/@daibh/cdk/v/0.0.1) |
 
-## Publishing
+### How it work?
 
-After building your library with `ng build material`, go to the dist folder `cd dist/material` and run `npm publish`.
+```ts
+@Component({
+  selector: 'storybook-material-example',
+  template: `
+    <div class="wrapper">
+      <nw-carousel [items]="items"></nw-carousel>
+    </div>
+  `,
+  styleUrls: ['./material-example.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    CarouselComponent
+  ]
+})
+export class MaterialExampleComponent {
+  @Input() items: ICarouselItem[];
+}
+```
 
-## Running unit tests
+## License
 
-Run `ng test material` to execute the unit tests via [Karma](https://karma-runner.github.io).
+MIT
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+**Free Software, Bless you all!**

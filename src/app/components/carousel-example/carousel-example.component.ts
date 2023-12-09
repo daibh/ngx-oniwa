@@ -1,6 +1,6 @@
 import { CommonModule } from "@angular/common";
 import { Component, Input, ViewEncapsulation } from "@angular/core";
-import { CarouselComponent, ICarouselItem } from "@daibh/material";
+import { CarouselComponent, ICarouselItem, NW_CAROUSEL_CONFIG } from "@daibh/material";
 
 @Component({
   selector: 'storybook-carousel-example',
@@ -10,6 +10,9 @@ import { CarouselComponent, ICarouselItem } from "@daibh/material";
   imports: [
     CommonModule,
     CarouselComponent
+  ],
+  providers: [
+    { provide: NW_CAROUSEL_CONFIG, useValue: { height: '300px', automic: true } }
   ],
   encapsulation: ViewEncapsulation.None
 })

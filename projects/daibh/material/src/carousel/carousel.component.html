@@ -1,17 +1,17 @@
-<div class="carousel carousel-dark slide" data-bs-ride="carousel">
+<div class="carousel carousel-dark slide">
   <div class="carousel-indicators">
     <ng-template ngFor let-item let-idx="index" [ngForOf]="items">
-      <button [attr.aria-label]="item.title" type="button" (click)="onMoveToSlide(idx)"
-        [class.active]="idx === activatedIndex" [attr.aria-current]="idx === activatedIndex"></button>
+      <button [attr.aria-label]="item.title" type="button" (click)="onMoveToSlide(idx)" class="carousel-indicator"
+        [class.active]="isActivated(idx)" [attr.aria-current]="isActivated(idx)"></button>
     </ng-template>
   </div>
-  <div class="carousel-inner">
+  <div class="carousel-inner" [@activatedIndex]="activatedIndex">
     <ng-template ngFor let-item let-idx="index" [ngForOf]="items">
       <ng-container [ngTemplateOutlet]="itemTpl"
         [ngTemplateOutletContext]="{$implicit: item, index: idx }"></ng-container>
     </ng-template>
     <ng-template let-item let-index="index" #itemTpl>
-      <div class="carousel-item" [class.active]="index === activatedIndex">
+      <div class="carousel-item active" *ngIf="isActivated(index)">
         <ng-template [ngIf]="item.image">
           <img [src]="item.image" class="d-block m-auto" />
         </ng-template>

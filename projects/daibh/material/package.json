@@ -1,6 +1,24 @@
 {
   "name": "@daibh/material",
-  "version": "0.0.1",
+  "version": "0.0.7",
+  "author": {
+    "name": "daibh",
+    "email": "oniwa1102@gmail.com",
+    "url": "https://oniwa.net"
+  },
+  "keywords": [
+    "angular",
+    "oniwa",
+    "daibh",
+    "@daibh/cdk",
+    "@daibh/material"
+  ],
+  "description": "Angular library support some feature on development",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/daibh/ngx-oniwa"
+  },
+  "homepage": "https://storybook.oniwa.net",
   "peerDependencies": {
     "@angular/common": "^17.0.0",
     "@angular/core": "^17.0.0",

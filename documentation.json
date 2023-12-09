@@ -9,7 +9,7 @@
     "components": [
         {
             "name": "AppComponent",
-            "id": "component-AppComponent-4f4998104c62ef6a19af2aab03e8aa9d4e661550fd41f5a428b741f499f9597cff89369f908b722844ea98f37d6c99e2e11aa5ed68ecab942cdc067e64a72a25",
+            "id": "component-AppComponent-c4ca03177582d7298ad883fbb2c7b244c38522aec7e9c53361bd8fbe8efd231195b8038c5267e48b70ac265b0788eb4b8b6584456a0b7bf0f687f3055f01a2cd",
             "file": "src/app/app.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -51,12 +51,16 @@
                 },
                 {
                     "name": "RouterOutlet"
+                },
+                {
+                    "name": "RouterModule",
+                    "type": "module"
                 }
             ],
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { RouterOutlet } from '@angular/router';\n\n@Component({\n  selector: 'app-root',\n  standalone: true,\n  imports: [CommonModule, RouterOutlet],\n  templateUrl: './app.component.html',\n  styleUrl: './app.component.scss'\n})\nexport class AppComponent {\n  title = 'daibh';\n}\n",
+            "sourceCode": "import { Component } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { RouterModule, RouterOutlet } from '@angular/router';\n\n@Component({\n  selector: 'app-root',\n  standalone: true,\n  imports: [CommonModule, RouterOutlet, RouterModule],\n  templateUrl: './app.component.html',\n  styleUrl: './app.component.scss'\n})\nexport class AppComponent {\n  title = 'daibh';\n}\n",
             "styleUrl": "./app.component.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -66,13 +70,19 @@
         },
         {
             "name": "CarouselExampleComponent",
-            "id": "component-CarouselExampleComponent-d5c38104551ce66ef70f446e53b759710ccb3c1e249dfbff3c8e58241fe2dd3827bbe00a5d0eee0f92ef95b1872dfa9e09b42d1fb33e1c3f24c6f15a0f03d17c",
+            "id": "component-CarouselExampleComponent-6292c1ae57dc7c03a8efc1952c9f170d6aa19e4e73f1405c5f2fbb5bef84f3d7cb3f49feddd99271bdddd1d5f0a100387f98253af4d92d9713c94ad9c3714037",
             "file": "src/app/components/carousel-example/carousel-example.component.ts",
-            "encapsulation": [],
+            "encapsulation": [
+                "ViewEncapsulation.None"
+            ],
             "entryComponents": [],
             "inputs": [],
             "outputs": [],
-            "providers": [],
+            "providers": [
+                {
+                    "name": "{ provide: NW_CAROUSEL_CONFIG, useValue: { height: , automic: true } }"
+                }
+            ],
             "selector": "storybook-carousel-example",
             "styleUrls": [],
             "styles": [],
@@ -87,7 +97,7 @@
                     "defaultValue": "[]",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 12,
+                    "line": 20,
                     "type": "ICarouselItem[]",
                     "decorators": []
                 }
@@ -102,6 +112,10 @@
             "standalone": true,
             "imports": [
                 {
+                    "name": "CommonModule",
+                    "type": "module"
+                },
+                {
                     "name": "CarouselComponent",
                     "type": "component"
                 }
@@ -109,7 +123,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, Input } from \"@angular/core\";\r\nimport { CarouselComponent, ICarouselItem } from \"@daibh/material\";\r\n\r\n@Component({\r\n  selector: 'storybook-carousel-example',\r\n  templateUrl: './carousel-example.component.html',\r\n  styleUrl: './carousel-example.component.scss',\r\n  standalone: true,\r\n  imports: [CarouselComponent]\r\n})\r\nexport class CarouselExampleComponent {\r\n  @Input() items: ICarouselItem[] = [];\r\n}",
+            "sourceCode": "import { CommonModule } from \"@angular/common\";\r\nimport { Component, Input, ViewEncapsulation } from \"@angular/core\";\r\nimport { CarouselComponent, ICarouselItem, NW_CAROUSEL_CONFIG } from \"@daibh/material\";\r\n\r\n@Component({\r\n  selector: 'storybook-carousel-example',\r\n  templateUrl: './carousel-example.component.html',\r\n  styleUrl: './carousel-example.component.scss',\r\n  standalone: true,\r\n  imports: [\r\n    CommonModule,\r\n    CarouselComponent\r\n  ],\r\n  providers: [\r\n    { provide: NW_CAROUSEL_CONFIG, useValue: { height: '300px', automic: true } }\r\n  ],\r\n  encapsulation: ViewEncapsulation.None\r\n})\r\nexport class CarouselExampleComponent {\r\n  @Input() items: ICarouselItem[] = [];\r\n}",
             "styleUrl": "./carousel-example.component.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -255,7 +269,7 @@
             "implements": [
                 "OnInit"
             ],
-            "templateData": "<div class=\"wrapper\">\r\n  <div class=\"pdf-viewer-thumbnail\">\r\n    <ngx-pdf-thumbnail></ngx-pdf-thumbnail>\r\n  </div>\r\n  <div class=\"pdf-viewer\">\r\n    <ngx-pdf [src]=\"pdfSrc\"></ngx-pdf>\r\n  </div>\r\n</div>\r\n<div>\r\n  <button (click)=\"onAddStamp()\">add stamp</button>\r\n</div>"
+            "templateData": "<div class=\"wrapper\">\r\n  <div class=\"pdf-viewer-thumbnail\">\r\n    <ngx-pdf-thumbnail></ngx-pdf-thumbnail>\r\n  </div>\r\n  <div class=\"pdf-viewer\">\r\n    <ngx-pdf [src]=\"pdfSrc\"></ngx-pdf>\r\n  </div>\r\n</div>"
         }
     ],
     "modules": [],
@@ -269,7 +283,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "ApplicationConfig",
-                "defaultValue": "{\n  providers: [provideRouter(routes)]\n}"
+                "defaultValue": "{\n  providers: [\n    provideRouter(routes)\n  ]\n}"
             },
             {
                 "name": "preview",
@@ -309,7 +323,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "StoryFn<CarouselExampleComponent>",
-                "defaultValue": "(args: CarouselExampleComponent) => ({\n  props: args,\n})"
+                "defaultValue": "(args: CarouselExampleComponent) => ({\n  props: args\n})"
             },
             {
                 "name": "Template",
@@ -335,7 +349,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "ApplicationConfig",
-                    "defaultValue": "{\n  providers: [provideRouter(routes)]\n}"
+                    "defaultValue": "{\n  providers: [\n    provideRouter(routes)\n  ]\n}"
                 }
             ],
             ".storybook/preview.ts": [
@@ -369,7 +383,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "StoryFn<CarouselExampleComponent>",
-                    "defaultValue": "(args: CarouselExampleComponent) => ({\n  props: args,\n})"
+                    "defaultValue": "(args: CarouselExampleComponent) => ({\n  props: args\n})"
                 }
             ],
             "src/stories/pdf.stories.ts": [
