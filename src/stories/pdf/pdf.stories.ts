@@ -1,5 +1,5 @@
 import type { StoryFn, Meta } from '@storybook/angular';
-import { PdfExampleComponent } from '../app/components';
+import { PdfExampleComponent } from '../../app/components';
 
 export default {
   title: 'Pdf/Primary',

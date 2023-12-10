@@ -132,6 +132,128 @@
             "templateData": "<div class=\"wrapper\">\r\n  <nw-carousel [items]=\"items\"></nw-carousel>\r\n</div>"
         },
         {
+            "name": "OffcanvasExampleComponent",
+            "id": "component-OffcanvasExampleComponent-05382bb6ce606727eb3b8737020ee1b6d28108d6361a02f8e438c89e1262955bb8ccd4bdd8759ea2f6960234e3288154cdb720d14a8b70f1cde3a3fcbc917c73",
+            "file": "src/app/components/offcanvas-example/offcanvas-example.component.ts",
+            "encapsulation": [
+                "ViewEncapsulation.None"
+            ],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [
+                {
+                    "name": "{ provide: NW_OFFCANVAS_CONFIG, useValue: { name: , backdrop: true } }"
+                }
+            ],
+            "selector": "storybook-offcanvas-example",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./offcanvas-example.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [
+                {
+                    "name": "opened",
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 21,
+                    "type": "boolean",
+                    "decorators": []
+                },
+                {
+                    "name": "position",
+                    "defaultValue": "'start'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 20,
+                    "type": "OffcanvasPosition",
+                    "decorators": []
+                },
+                {
+                    "name": "title",
+                    "defaultValue": "'Demo offcanvas'",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 19,
+                    "type": "string",
+                    "decorators": []
+                }
+            ],
+            "outputsClass": [
+                {
+                    "name": "openedChange",
+                    "defaultValue": "new EventEmitter<boolean>()",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "line": 22,
+                    "type": "EventEmitter"
+                }
+            ],
+            "propertiesClass": [
+                {
+                    "name": "_offcanvasService",
+                    "defaultValue": "inject(OffcanvasService)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "OffcanvasService",
+                    "optional": false,
+                    "description": "",
+                    "line": 18,
+                    "modifierKind": [
+                        123,
+                        148
+                    ]
+                }
+            ],
+            "methodsClass": [
+                {
+                    "name": "open",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 24,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "openByService",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 29,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "OffcanvasComponent",
+                    "type": "component"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component, EventEmitter, Input, Output, ViewEncapsulation, inject } from \"@angular/core\";\r\nimport { NW_OFFCANVAS_CONFIG, OffcanvasComponent, OffcanvasPosition, OffcanvasService } from \"@daibh/material\";\r\n\r\n@Component({\r\n  selector: 'storybook-offcanvas-example',\r\n  templateUrl: './offcanvas-example.component.html',\r\n  styleUrl: './offcanvas-example.component.scss',\r\n  standalone: true,\r\n  imports: [\r\n    OffcanvasComponent\r\n  ],\r\n  providers: [\r\n    { provide: NW_OFFCANVAS_CONFIG, useValue: { name: 'offcanvas-example', backdrop: true } }\r\n  ],\r\n  encapsulation: ViewEncapsulation.None\r\n})\r\nexport class OffcanvasExampleComponent {\r\n  private readonly _offcanvasService: OffcanvasService = inject(OffcanvasService);\r\n  @Input() title: string = 'Demo offcanvas';\r\n  @Input() position: OffcanvasPosition = 'start';\r\n  @Input() opened: boolean = false;\r\n  @Output() openedChange = new EventEmitter<boolean>();\r\n\r\n  open(): void {\r\n    this.opened = true;\r\n    this.openedChange.emit(this.opened);\r\n  }\r\n\r\n  openByService(): void {\r\n    this._offcanvasService.nextState('offcanvas-example', true);\r\n  }\r\n}",
+            "styleUrl": "./offcanvas-example.component.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<div class=\"wrapper\">\r\n  <nw-offcanvas #offcanvas [title]=\"title\" [position]=\"position\" [(opened)]=\"opened\">\r\n    <div>\r\n      <h3>demo offcanvas content</h3>\r\n    </div>\r\n  </nw-offcanvas>\r\n  <button class=\"btn btn-sm btn-primary ms-3\" (click)=\"open()\">Open offcanvas</button>\r\n  <button class=\"btn btn-sm btn-primary ms-3\" (click)=\"offcanvas.open()\">Open offcanvas by ref</button>\r\n  <button class=\"btn btn-sm btn-primary ms-3\" (click)=\"openByService()\">Open offcanvas by service</button>\r\n</div>"
+        },
+        {
             "name": "PdfExampleComponent",
             "id": "component-PdfExampleComponent-9b86b4663762795d83b44744f30c62946ba7f8d7e4d3c0667b2070cbc049912b9cb5dad80fa3e94c952209b195e7ae81eda28869af019d32e210e39dfaf4273f",
             "file": "src/app/components/pdf-example/pdf-example.component.ts",
@@ -299,7 +421,7 @@
                 "name": "Primary",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/stories/carousel.stories.ts",
+                "file": "src/stories/pdf/pdf.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "",
@@ -309,7 +431,17 @@
                 "name": "Primary",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/stories/pdf.stories.ts",
+                "file": "src/stories/materials/offcanvas/offcanvas.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "Template.bind({})"
+            },
+            {
+                "name": "Primary",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/stories/materials/carousel/carousel.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "",
@@ -319,21 +451,31 @@
                 "name": "Template",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/stories/carousel.stories.ts",
+                "file": "src/stories/pdf/pdf.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "StoryFn<CarouselExampleComponent>",
-                "defaultValue": "(args: CarouselExampleComponent) => ({\n  props: args\n})"
+                "type": "StoryFn<PdfExampleComponent>",
+                "defaultValue": "(args: PdfExampleComponent) => ({\n  props: args,\n})"
             },
             {
                 "name": "Template",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/stories/pdf.stories.ts",
+                "file": "src/stories/materials/offcanvas/offcanvas.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "StoryFn<PdfExampleComponent>",
-                "defaultValue": "(args: PdfExampleComponent) => ({\n  props: args,\n})"
+                "type": "StoryFn<OffcanvasExampleComponent>",
+                "defaultValue": "(args: OffcanvasExampleComponent) => ({\n  props: args\n})"
+            },
+            {
+                "name": "Template",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/stories/materials/carousel/carousel.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "StoryFn<CarouselExampleComponent>",
+                "defaultValue": "(args: CarouselExampleComponent) => ({\n  props: args\n})"
             }
         ],
         "functions": [],
@@ -364,12 +506,12 @@
                     "defaultValue": "{\n  parameters: {\n    actions: { argTypesRegex: \"^on[A-Z].*\" },\n    controls: {\n      matchers: {\n        color: /(background|color)$/i,\n        date: /Date$/i,\n      },\n    },\n  },\n}"
                 }
             ],
-            "src/stories/carousel.stories.ts": [
+            "src/stories/pdf/pdf.stories.ts": [
                 {
                     "name": "Primary",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
-                    "file": "src/stories/carousel.stories.ts",
+                    "file": "src/stories/pdf/pdf.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "",
@@ -379,33 +521,55 @@
                     "name": "Template",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
-                    "file": "src/stories/carousel.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "StoryFn<CarouselExampleComponent>",
-                    "defaultValue": "(args: CarouselExampleComponent) => ({\n  props: args\n})"
-                }
-            ],
-            "src/stories/pdf.stories.ts": [
-                {
-                    "name": "Primary",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/stories/pdf.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "defaultValue": "Template.bind({})"
-                },
-                {
-                    "name": "Template",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/stories/pdf.stories.ts",
+                    "file": "src/stories/pdf/pdf.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "StoryFn<PdfExampleComponent>",
                     "defaultValue": "(args: PdfExampleComponent) => ({\n  props: args,\n})"
+                }
+            ],
+            "src/stories/materials/offcanvas/offcanvas.stories.ts": [
+                {
+                    "name": "Primary",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/materials/offcanvas/offcanvas.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "Template.bind({})"
+                },
+                {
+                    "name": "Template",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/materials/offcanvas/offcanvas.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "StoryFn<OffcanvasExampleComponent>",
+                    "defaultValue": "(args: OffcanvasExampleComponent) => ({\n  props: args\n})"
+                }
+            ],
+            "src/stories/materials/carousel/carousel.stories.ts": [
+                {
+                    "name": "Primary",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/materials/carousel/carousel.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "Template.bind({})"
+                },
+                {
+                    "name": "Template",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/materials/carousel/carousel.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "StoryFn<CarouselExampleComponent>",
+                    "defaultValue": "(args: CarouselExampleComponent) => ({\n  props: args\n})"
                 }
             ]
         },
@@ -457,6 +621,15 @@
                 "status": "low"
             },
             {
+                "filePath": "src/app/components/offcanvas-example/offcanvas-example.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "OffcanvasExampleComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/8",
+                "status": "low"
+            },
+            {
                 "filePath": "src/app/components/pdf-example/pdf-example.component.ts",
                 "type": "component",
                 "linktype": "component",
@@ -466,7 +639,7 @@
                 "status": "low"
             },
             {
-                "filePath": "src/stories/carousel.stories.ts",
+                "filePath": "src/stories/materials/carousel/carousel.stories.ts",
                 "type": "variable",
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
@@ -476,7 +649,7 @@
                 "status": "low"
             },
             {
-                "filePath": "src/stories/carousel.stories.ts",
+                "filePath": "src/stories/materials/carousel/carousel.stories.ts",
                 "type": "variable",
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
@@ -486,7 +659,7 @@
                 "status": "low"
             },
             {
-                "filePath": "src/stories/pdf.stories.ts",
+                "filePath": "src/stories/materials/offcanvas/offcanvas.stories.ts",
                 "type": "variable",
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
@@ -496,7 +669,27 @@
                 "status": "low"
             },
             {
-                "filePath": "src/stories/pdf.stories.ts",
+                "filePath": "src/stories/materials/offcanvas/offcanvas.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Template",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/stories/pdf/pdf.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Primary",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/stories/pdf/pdf.stories.ts",
                 "type": "variable",
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",

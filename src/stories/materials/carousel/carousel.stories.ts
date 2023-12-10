@@ -1,12 +1,11 @@
 import { type StoryFn, type Meta, moduleMetadata, applicationConfig  } from '@storybook/angular';
-import { CarouselExampleComponent } from '../app/components';
+import { CarouselExampleComponent } from '../../../app/components';
 import { CommonModule } from '@angular/common';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export default {
   title: 'Material/Carousel/Primary',
   component: CarouselExampleComponent,
-  tags: ['autodocs'],
   decorators: [
     applicationConfig({
       providers: [provideAnimationsAsync()],

@@ -14,7 +14,7 @@ The goal of creating this library to create common dump component to reduce time
 Install the dependencies and devDependencies and start the server.
 
 ```sh
-npm install @daibh/material --save
+npm install @daibh/cdk @daibh/material --save
 ```
 
 ### Dependencies versions

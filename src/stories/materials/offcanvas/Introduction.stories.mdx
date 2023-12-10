@@ -1,0 +1,87 @@
+import { Meta } from '@storybook/addon-docs';
+
+<Meta title="Material/Offcanvas/How it work" />
+
+# Angular Material
+This library was generated with Angular CLI version 17.0.0
+The goal of creating this library to create common dump component to reduce time to development on the Angular framework.
+
+### Features
+- ✨Provide usage components
+- ✨Structure of code more clean
+
+### Dependencies:
+- [Angular](https://angular.dev/) - Awesome typescript-based framework easier to develop application
+- [@daibh/cdk](https://www.npmjs.com/package/@daibh/cdk) - Library include some function support to develop this library.
+
+### Installation
+Install the dependencies and devDependencies and start the server.
+
+```sh
+npm install @daibh/cdk @daibh/material --save
+```
+
+### Dependencies versions
+| Library | Version |
+| ------ | ------ |
+| Angular | [17.0.0](https://github.com/angular/angular/releases/tag/17.0.0) |
+| Pdf.js | [v3.8.162](https://github.com/mozilla/pdf.js/releases/tag/v3.8.162) |
+| @daibh/cdk | [v0.0.1](https://www.npmjs.com/package/@daibh/cdk/v/0.0.1) |
+
+### How it work?
+
+```ts
+import { Component, EventEmitter, Input, Output, ViewEncapsulation } from "@angular/core";
+import { CommonModule } from '@angular/common';
+import { OffcanvasComponent, OffcanvasPosition } from "@daibh/material";
+
+@Component({
+  selector: 'storybook-offcanvas-example',
+  template: `
+    <div class="wrapper">
+      <nw-offcanvas #offcanvas [title]="title" [position]="position" [backdrop]="backdrop" [(opened)]="opened">
+        <div>
+          <h3>demo offcanvas content</h3>
+        </div>
+      </nw-offcanvas>
+      <button class="btn btn-sm btn-primary ms-3" (click)="open()">Open offcanvas</button>
+      <button class="btn btn-sm btn-primary ms-3" (click)="offcanvas.open()">Open offcanvas by ref</button>
+      <button class="btn btn-sm btn-primary ms-3" (click)="openByService()">Open offcanvas by service</button>
+    </div>
+  `,
+  styleUrl: './offcanvas-example.component.scss',
+  standalone: true,
+  imports: [
+    OffcanvasComponent
+  ],
+  providers: [
+    { provide: NW_OFFCANVAS_CONFIG, useValue: { name: 'offcanvas-example', backdrop: true } }
+  ],
+  encapsulation: ViewEncapsulation.None
+})
+export class OffcanvasExampleComponent {
+  private readonly _offcanvasService: OffcanvasService = inject(OffcanvasService);
+
+  @Input() title: string = 'Demo offcanvas';
+  @Input() position: OffcanvasPosition = 'start';
+  @Input() opened: boolean = false;
+  @Output() openedChange = new EventEmitter<boolean>();
+
+  open(): void {
+    this.opened = true;
+    this.openedChange.emit(this.opened);
+  }
+
+  openByService(): void {
+    this._offcanvasService.nextState('offcanvas-example', true);
+  }
+}
+```
+
+Hey 👋 If it's useful for you. You can now [buy me a coffee!](https://www.buymeacoffee.com/oniwa1102s) ^^!
+
+## License
+
+MIT
+
+**Free Software, Bless you all!**

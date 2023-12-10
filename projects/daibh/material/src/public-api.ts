@@ -3,3 +3,4 @@
  */
 
 export * from './carousel';
+export * from './offcanvas';

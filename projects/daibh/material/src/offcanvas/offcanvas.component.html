@@ -1,0 +1,15 @@
+<div class="offcanvas offcanvas-{{position}}" [class.show]="opened" [class.hiding]="!opened" tabindex="-1">
+  <div class="offcanvas-header">
+    @if (title) {
+      <h5 class="offcanvas-title">{{title}}</h5>
+    }
+    <button type="button" class="btn-close" aria-label="Close" (click)="dismiss()"></button>
+  </div>
+  <div class="offcanvas-body">
+    <ng-content></ng-content>
+  </div>
+</div>
+
+@if (hasBackdrop) {
+  <div class="offcanvas-backdrop fade" (click)="dismiss(true)" [class.show]="opened" [class.hiding]="!opened"></div>
+}

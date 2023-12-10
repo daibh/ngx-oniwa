@@ -1,0 +1,86 @@
+import { Meta } from '@storybook/addon-docs';
+
+<Meta title="Material/Carousel/How it work" />
+
+# Angular Material
+This library was generated with Angular CLI version 17.0.0
+The goal of creating this library to create common dump component to reduce time to development on the Angular framework.
+
+### Features
+- ✨Provide usage components
+- ✨Structure of code more clean
+
+### Dependencies:
+- [Angular](https://angular.dev/) - Awesome typescript-based framework easier to develop application
+- [@daibh/cdk](https://www.npmjs.com/package/@daibh/cdk) - Library include some function support to develop this library.
+
+### Installation
+Install the dependencies and devDependencies and start the server.
+
+```sh
+npm install @daibh/cdk @daibh/material --save
+```
+
+### Dependencies versions
+| Library | Version |
+| ------ | ------ |
+| Angular | [17.0.0](https://github.com/angular/angular/releases/tag/17.0.0) |
+| Pdf.js | [v3.8.162](https://github.com/mozilla/pdf.js/releases/tag/v3.8.162) |
+| @daibh/cdk | [v0.0.1](https://www.npmjs.com/package/@daibh/cdk/v/0.0.1) |
+
+### How it work?
+
+```ts
+import { CommonModule } from "@angular/common";
+import { Component, Input, ViewEncapsulation } from "@angular/core";
+import { CarouselComponent, ICarouselItem, NW_CAROUSEL_CONFIG } from "@daibh/material";
+
+@Component({
+  selector: 'storybook-carousel-example',
+  template: `
+    <div class="wrapper">
+      <nw-carousel [items]="items"></nw-carousel>
+    </div>
+  `,
+  styleUrl: './carousel-example.component.scss',
+  standalone: true,
+  imports: [
+    CommonModule,
+    CarouselComponent
+  ],
+  providers: [
+    { provide: NW_CAROUSEL_CONFIG, useValue: { height: '300px', automic: false } }
+  ],
+  encapsulation: ViewEncapsulation.None
+})
+export class CarouselExampleComponent {
+  @Input() items: ICarouselItem[] = [
+    {
+      "title": "Đây là data Ads demo 4",
+      "description": "Đây là data Ads demo 4. Thật đấy",
+      "image": "/images/accessibility.png",
+      "routeLink": "/test/ahihi4"
+    },
+    {
+      "title": "Đây là data Ads demo 6",
+      "description": "Đây là data Ads demo 6. Thật đấy",
+      "image": "/images/addon-library.png",
+      "routeLink": "/test/ahihi6"
+    },
+    {
+      "title": "Đây là data Ads demo 5",
+      "description": "Đây là data Ads demo 5. Thật đấy",
+      "image": "/images/assets.png",
+      "routeLink": "/test/ahihi5"
+    }
+  ];
+}
+```
+
+Hey 👋 If it's useful for you. You can now [buy me a coffee!](https://www.buymeacoffee.com/oniwa1102s) ^^!
+
+## License
+
+MIT
+
+**Free Software, Bless you all!**

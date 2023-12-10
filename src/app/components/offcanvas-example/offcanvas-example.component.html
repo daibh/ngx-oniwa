@@ -1,0 +1,10 @@
+<div class="wrapper">
+  <nw-offcanvas #offcanvas [title]="title" [position]="position" [(opened)]="opened">
+    <div>
+      <h3>demo offcanvas content</h3>
+    </div>
+  </nw-offcanvas>
+  <button class="btn btn-sm btn-primary ms-3" (click)="open()">Open offcanvas</button>
+  <button class="btn btn-sm btn-primary ms-3" (click)="offcanvas.open()">Open offcanvas by ref</button>
+  <button class="btn btn-sm btn-primary ms-3" (click)="openByService()">Open offcanvas by service</button>
+</div>
