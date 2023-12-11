@@ -1,0 +1,64 @@
+import { Meta } from '@storybook/addon-docs';
+
+<Meta title="Material/Offcanvas/How it work" />
+
+# Angular Material
+This library was generated with Angular CLI version 17.0.0
+The goal of creating this library to create common dump component to reduce time to development on the Angular framework.
+
+### Features
+- ✨Provide usage components
+- ✨Structure of code more clean
+
+### Dependencies:
+- [Angular](https://angular.dev/) - Awesome typescript-based framework easier to develop application
+- [@daibh/cdk](https://www.npmjs.com/package/@daibh/cdk) - Library include some function support to develop this library.
+
+### Installation
+Install the dependencies and devDependencies and start the server.
+
+```sh
+npm install @daibh/cdk @daibh/material --save
+```
+
+### Dependencies versions
+| Library | Version |
+| ------ | ------ |
+| Angular | [17.0.0](https://github.com/angular/angular/releases/tag/17.0.0) |
+| Pdf.js | [v3.8.162](https://github.com/mozilla/pdf.js/releases/tag/v3.8.162) |
+| @daibh/cdk | [v0.0.1](https://www.npmjs.com/package/@daibh/cdk/v/0.0.1) |
+
+### How it work?
+
+```ts
+import { Component } from "@angular/core";
+import { ModalComponent } from "@daibh/material";
+
+@Component({
+  selector: 'storybook-modal-example',
+  template: `
+    <div class="wrapper">
+      <nw-modal #modal></nw-modal>
+      <button class="btn btn-primary" (click)="modal.open()">Open</button>
+    </div>
+  `,
+  styleUrl: './modal-example.component.scss',
+  standalone: true,
+  imports: [
+    ModalComponent
+  ]
+})
+export class ModalExampleComponent {
+  openModal(): void {
+    
+  }
+}
+```
+
+Hey 👋 If it's useful for you. You can now [buy me a coffee!](https://www.buymeacoffee.com/oniwa1102s) ^^!
+
+## License
+
+MIT
+
+**Free Software, Bless you all!**

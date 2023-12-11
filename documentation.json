@@ -132,6 +132,60 @@
             "templateData": "<div class=\"wrapper\">\r\n  <nw-carousel [items]=\"items\"></nw-carousel>\r\n</div>"
         },
         {
+            "name": "ModalExampleComponent",
+            "id": "component-ModalExampleComponent-e1f69b0bd6dca355ff4909d8892088856d0a1e1d2a2ed3bde8c050fc1b047300e2444b45e99ef53f121850f4c09bfc88d086998765c280e4cabf4726fe0bc13d",
+            "file": "src/app/components/modal-example/modal-example.component.ts",
+            "encapsulation": [],
+            "entryComponents": [],
+            "inputs": [],
+            "outputs": [],
+            "providers": [],
+            "selector": "storybook-modal-example",
+            "styleUrls": [],
+            "styles": [],
+            "templateUrl": [
+                "./modal-example.component.html"
+            ],
+            "viewProviders": [],
+            "hostDirectives": [],
+            "inputsClass": [],
+            "outputsClass": [],
+            "propertiesClass": [],
+            "methodsClass": [
+                {
+                    "name": "openModal",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 14,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                }
+            ],
+            "deprecated": false,
+            "deprecationMessage": "",
+            "hostBindings": [],
+            "hostListeners": [],
+            "standalone": true,
+            "imports": [
+                {
+                    "name": "ModalComponent",
+                    "type": "component"
+                }
+            ],
+            "description": "",
+            "rawdescription": "\n",
+            "type": "component",
+            "sourceCode": "import { Component } from \"@angular/core\";\r\nimport { ModalComponent } from \"@daibh/material\";\r\n\r\n@Component({\r\n  selector: 'storybook-modal-example',\r\n  templateUrl: './modal-example.component.html',\r\n  styleUrl: './modal-example.component.scss',\r\n  standalone: true,\r\n  imports: [\r\n    ModalComponent\r\n  ]\r\n})\r\nexport class ModalExampleComponent {\r\n  openModal(): void {\r\n    \r\n  }\r\n}",
+            "styleUrl": "./modal-example.component.scss",
+            "assetsDirs": [],
+            "styleUrlsData": "",
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<div class=\"wrapper\">\r\n  <nw-modal #modal></nw-modal>\r\n  <button class=\"btn btn-primary\" (click)=\"modal.open()\">Open</button>\r\n</div>"
+        },
+        {
             "name": "OffcanvasExampleComponent",
             "id": "component-OffcanvasExampleComponent-05382bb6ce606727eb3b8737020ee1b6d28108d6361a02f8e438c89e1262955bb8ccd4bdd8759ea2f6960234e3288154cdb720d14a8b70f1cde3a3fcbc917c73",
             "file": "src/app/components/offcanvas-example/offcanvas-example.component.ts",
@@ -431,7 +485,7 @@
                 "name": "Primary",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/stories/materials/offcanvas/offcanvas.stories.ts",
+                "file": "src/stories/materials/carousel/carousel.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "",
@@ -441,7 +495,17 @@
                 "name": "Primary",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/stories/materials/carousel/carousel.stories.ts",
+                "file": "src/stories/materials/modal/modal.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "Template.bind({})"
+            },
+            {
+                "name": "Primary",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/stories/materials/offcanvas/offcanvas.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "",
@@ -461,21 +525,31 @@
                 "name": "Template",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/stories/materials/offcanvas/offcanvas.stories.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "StoryFn<OffcanvasExampleComponent>",
-                "defaultValue": "(args: OffcanvasExampleComponent) => ({\n  props: args\n})"
-            },
-            {
-                "name": "Template",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/stories/materials/carousel/carousel.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "StoryFn<CarouselExampleComponent>",
                 "defaultValue": "(args: CarouselExampleComponent) => ({\n  props: args\n})"
+            },
+            {
+                "name": "Template",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/stories/materials/modal/modal.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "StoryFn<ModalExampleComponent>",
+                "defaultValue": "(args: ModalExampleComponent) => ({\n  props: args\n})"
+            },
+            {
+                "name": "Template",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/stories/materials/offcanvas/offcanvas.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "StoryFn<OffcanvasExampleComponent>",
+                "defaultValue": "(args: OffcanvasExampleComponent) => ({\n  props: args\n})"
             }
         ],
         "functions": [],
@@ -528,28 +602,6 @@
                     "defaultValue": "(args: PdfExampleComponent) => ({\n  props: args,\n})"
                 }
             ],
-            "src/stories/materials/offcanvas/offcanvas.stories.ts": [
-                {
-                    "name": "Primary",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/stories/materials/offcanvas/offcanvas.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "defaultValue": "Template.bind({})"
-                },
-                {
-                    "name": "Template",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/stories/materials/offcanvas/offcanvas.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "StoryFn<OffcanvasExampleComponent>",
-                    "defaultValue": "(args: OffcanvasExampleComponent) => ({\n  props: args\n})"
-                }
-            ],
             "src/stories/materials/carousel/carousel.stories.ts": [
                 {
                     "name": "Primary",
@@ -570,6 +622,50 @@
                     "deprecationMessage": "",
                     "type": "StoryFn<CarouselExampleComponent>",
                     "defaultValue": "(args: CarouselExampleComponent) => ({\n  props: args\n})"
+                }
+            ],
+            "src/stories/materials/modal/modal.stories.ts": [
+                {
+                    "name": "Primary",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/materials/modal/modal.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "Template.bind({})"
+                },
+                {
+                    "name": "Template",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/materials/modal/modal.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "StoryFn<ModalExampleComponent>",
+                    "defaultValue": "(args: ModalExampleComponent) => ({\n  props: args\n})"
+                }
+            ],
+            "src/stories/materials/offcanvas/offcanvas.stories.ts": [
+                {
+                    "name": "Primary",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/materials/offcanvas/offcanvas.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "Template.bind({})"
+                },
+                {
+                    "name": "Template",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/materials/offcanvas/offcanvas.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "StoryFn<OffcanvasExampleComponent>",
+                    "defaultValue": "(args: OffcanvasExampleComponent) => ({\n  props: args\n})"
                 }
             ]
         },
@@ -621,6 +717,15 @@
                 "status": "low"
             },
             {
+                "filePath": "src/app/components/modal-example/modal-example.component.ts",
+                "type": "component",
+                "linktype": "component",
+                "name": "ModalExampleComponent",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
                 "filePath": "src/app/components/offcanvas-example/offcanvas-example.component.ts",
                 "type": "component",
                 "linktype": "component",
@@ -650,6 +755,26 @@
             },
             {
                 "filePath": "src/stories/materials/carousel/carousel.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Template",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/stories/materials/modal/modal.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Primary",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/stories/materials/modal/modal.stories.ts",
                 "type": "variable",
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",

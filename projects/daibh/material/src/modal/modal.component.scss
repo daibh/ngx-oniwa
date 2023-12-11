@@ -1,0 +1,5 @@
+.modal, .modal-backdrop {
+  &:not(.show) {
+    z-index: -1;
+  }
+}
