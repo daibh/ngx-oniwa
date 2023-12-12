@@ -133,9 +133,11 @@
         },
         {
             "name": "ModalExampleComponent",
-            "id": "component-ModalExampleComponent-e1f69b0bd6dca355ff4909d8892088856d0a1e1d2a2ed3bde8c050fc1b047300e2444b45e99ef53f121850f4c09bfc88d086998765c280e4cabf4726fe0bc13d",
+            "id": "component-ModalExampleComponent-dff069650febc5df73f8683a8f0cfe910eebf31ef6be3b339ef611ded7d3da90fa85af8a209a4c6a5e5219d51951e6f2a7d1f9725b28b2afda36d1cd5fb28f7a",
             "file": "src/app/components/modal-example/modal-example.component.ts",
-            "encapsulation": [],
+            "encapsulation": [
+                "ViewEncapsulation.None"
+            ],
             "entryComponents": [],
             "inputs": [],
             "outputs": [],
@@ -158,7 +160,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 14,
+                    "line": 15,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -177,7 +179,7 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component } from \"@angular/core\";\r\nimport { ModalComponent } from \"@daibh/material\";\r\n\r\n@Component({\r\n  selector: 'storybook-modal-example',\r\n  templateUrl: './modal-example.component.html',\r\n  styleUrl: './modal-example.component.scss',\r\n  standalone: true,\r\n  imports: [\r\n    ModalComponent\r\n  ]\r\n})\r\nexport class ModalExampleComponent {\r\n  openModal(): void {\r\n    \r\n  }\r\n}",
+            "sourceCode": "import { Component, ViewEncapsulation } from \"@angular/core\";\r\nimport { ModalComponent } from \"@daibh/material\";\r\n\r\n@Component({\r\n  selector: 'storybook-modal-example',\r\n  templateUrl: './modal-example.component.html',\r\n  styleUrl: './modal-example.component.scss',\r\n  standalone: true,\r\n  imports: [\r\n    ModalComponent\r\n  ],\r\n  encapsulation: ViewEncapsulation.None\r\n})\r\nexport class ModalExampleComponent {\r\n  openModal(): void {\r\n\r\n  }\r\n}",
             "styleUrl": "./modal-example.component.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
@@ -309,7 +311,7 @@
         },
         {
             "name": "PdfExampleComponent",
-            "id": "component-PdfExampleComponent-9b86b4663762795d83b44744f30c62946ba7f8d7e4d3c0667b2070cbc049912b9cb5dad80fa3e94c952209b195e7ae81eda28869af019d32e210e39dfaf4273f",
+            "id": "component-PdfExampleComponent-4322222d8cb4f250eed6aa13c2a2326c1ab644389233dd8e753e6e3eba250c45c29fdc368d76bec4eb1c47d5c76494ac8be21db24c9f7fa8d8355688acbc2e8b",
             "file": "src/app/components/pdf-example/pdf-example.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -331,7 +333,7 @@
                     "name": "heavySrc",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 24,
+                    "line": 30,
                     "type": "string",
                     "decorators": []
                 },
@@ -339,7 +341,7 @@
                     "name": "lightSrc",
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "line": 23,
+                    "line": 29,
                     "type": "string",
                     "decorators": []
                 }
@@ -354,7 +356,7 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 22,
+                    "line": 26,
                     "modifierKind": [
                         123,
                         148
@@ -368,9 +370,22 @@
                     "type": "",
                     "optional": false,
                     "description": "",
-                    "line": 21,
+                    "line": 25,
                     "modifierKind": [
                         123,
+                        148
+                    ]
+                },
+                {
+                    "name": "page",
+                    "defaultValue": "signal(1)",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "optional": false,
+                    "description": "",
+                    "line": 27,
+                    "modifierKind": [
                         148
                     ]
                 },
@@ -381,17 +396,37 @@
                     "type": "string",
                     "optional": false,
                     "description": "",
-                    "line": 26
+                    "line": 32
                 }
             ],
             "methodsClass": [
+                {
+                    "name": "next",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 85,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
                 {
                     "name": "ngOnInit",
                     "args": [],
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 28,
+                    "line": 34,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "onAddRectangle",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 55,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -401,7 +436,37 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 38,
+                    "line": 51,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "previous",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 89,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "zoomIn",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 77,
+                    "deprecated": false,
+                    "deprecationMessage": ""
+                },
+                {
+                    "name": "zoomOut",
+                    "args": [],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 81,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -421,6 +486,10 @@
                     "type": "component"
                 },
                 {
+                    "name": "DrawableLayerComponent",
+                    "type": "component"
+                },
+                {
                     "name": "PdfThumbnailComponent",
                     "type": "component"
                 },
@@ -432,11 +501,11 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, Input, OnInit, inject } from '@angular/core';\r\nimport { CommonModule } from '@angular/common';\r\nimport { AnotationEvent, PdfComponent, PdfService, ResourceEvent } from '@daibh/pdf';\r\nimport { PdfThumbnailComponent } from '@daibh/pdf/components';\r\nimport { FormsModule } from '@angular/forms';\r\nimport { Subject, takeUntil, tap } from 'rxjs';\r\n\r\n@Component({\r\n  selector: 'storybook-pdf-viewer-example',\r\n  templateUrl: './pdf-example.component.html',\r\n  styleUrls: ['./pdf-example.component.scss'],\r\n  standalone: true,\r\n  imports: [\r\n    CommonModule,\r\n    PdfComponent,\r\n    PdfThumbnailComponent,\r\n    FormsModule\r\n  ]\r\n})\r\nexport class PdfExampleComponent implements OnInit {\r\n  private readonly _pdfService = inject(PdfService);\r\n  private readonly _destroy$ = new Subject();\r\n  @Input() lightSrc: string;\r\n  @Input() heavySrc: string;\r\n\r\n  pdfSrc: string;\r\n\r\n  ngOnInit(): void {\r\n    this.pdfSrc = this.lightSrc;\r\n    this._pdfService.observe(AnotationEvent.anotationChanged).pipe(\r\n      takeUntil(this._destroy$),\r\n      tap(_ => {\r\n        this._pdfService.dispatch({ name: ResourceEvent.downloadResource, details: {} });\r\n      })\r\n    ).subscribe();\r\n  }\r\n\r\n  onAddStamp(): void {\r\n    this._pdfService.dispatch({ name: AnotationEvent.createStamp, details: {} });\r\n  }\r\n}\r\n",
+            "sourceCode": "import { Component, Input, OnInit, inject, signal } from '@angular/core';\r\nimport { CommonModule } from '@angular/common';\r\nimport { AnotationEvent, PageEvent, PdfComponent, PdfService, ResourceEvent, ZoomEvent } from '@daibh/pdf';\r\nimport { DrawableLayerComponent, PdfThumbnailComponent, RectangleEvent } from '@daibh/pdf/components';\r\nimport { FormsModule } from '@angular/forms';\r\nimport { Subject, map, takeUntil, tap } from 'rxjs';\r\n\r\nconst { prevPage, nextPage, pageChanged } = PageEvent;\r\nconst { zoomIn, zoomOut } = ZoomEvent;\r\n\r\n@Component({\r\n  selector: 'storybook-pdf-viewer-example',\r\n  templateUrl: './pdf-example.component.html',\r\n  styleUrls: ['./pdf-example.component.scss'],\r\n  standalone: true,\r\n  imports: [\r\n    CommonModule,\r\n    PdfComponent,\r\n    DrawableLayerComponent,\r\n    PdfThumbnailComponent,\r\n    FormsModule\r\n  ]\r\n})\r\nexport class PdfExampleComponent implements OnInit {\r\n  private readonly _pdfService = inject(PdfService);\r\n  private readonly _destroy$ = new Subject();\r\n  readonly page = signal(1);\r\n\r\n  @Input() lightSrc: string;\r\n  @Input() heavySrc: string;\r\n\r\n  pdfSrc: string;\r\n\r\n  ngOnInit(): void {\r\n    this.pdfSrc = this.lightSrc;\r\n    this._pdfService.observe(AnotationEvent.anotationChanged).pipe(\r\n      takeUntil(this._destroy$),\r\n      tap(_ => {\r\n        this._pdfService.dispatch({ name: ResourceEvent.downloadResource, details: {} });\r\n      })\r\n    ).subscribe();\r\n\r\n    this._pdfService.observe(pageChanged).pipe(\r\n      takeUntil(this._destroy$),\r\n      tap(data =>\r\n        this.page.update(() => Number((data as { pageNumber: number })?.pageNumber || 1))\r\n      )\r\n    ).subscribe();\r\n  }\r\n\r\n  onAddStamp(): void {\r\n    this._pdfService.dispatch({ name: AnotationEvent.createStamp, details: {} });\r\n  }\r\n\r\n  onAddRectangle(): void {\r\n    this._pdfService.dispatch({\r\n      name: RectangleEvent.addRectangle, details: {\r\n        rectangle: {\r\n          name: 'test-rectangle-123',\r\n          title: 'Pagination',\r\n          style: {\r\n            borderColor: 'red',\r\n            borderStyle: 'solid',\r\n            borderWidth: '1px'\r\n          },\r\n          viewport: {\r\n            x: 0,\r\n            y: 0,\r\n            w: 100,\r\n            h: 30\r\n          }\r\n        }\r\n      }\r\n    });\r\n  }\r\n\r\n  zoomIn(): void {\r\n    this._pdfService.dispatch({ name: zoomIn, details: {} });\r\n  }\r\n\r\n  zoomOut(): void {\r\n    this._pdfService.dispatch({ name: zoomOut, details: {} });\r\n  }\r\n\r\n  next(): void {\r\n    this._pdfService.dispatch({ name: nextPage, details: {} });\r\n  }\r\n\r\n  previous(): void {\r\n    this._pdfService.dispatch({ name: prevPage, details: {} });\r\n  }\r\n}\r\n",
             "assetsDirs": [],
             "styleUrlsData": [
                 {
-                    "data": ".wrapper {\r\n  display: flex;\r\n  flex-direction: row;\r\n\r\n  .pdf-viewer {\r\n    position: relative;\r\n    width: 100%;\r\n  }\r\n\r\n  .pdf-viewer-thumbnail {\r\n    flex: 1 0 auto;\r\n    flex-basis: 160px;\r\n    max-height: 100vh;\r\n    overflow-y: auto;\r\n    display: flex;\r\n    justify-content: center;\r\n    background-color: rgb(245, 246, 247);\r\n  }\r\n}",
+                    "data": "@import \"bootstrap/scss/bootstrap\";\r\n\r\n.toolbar {\r\n  height: 40px;\r\n  --bs-border-width: 1px;\r\n}\r\n\r\n.wrapper {\r\n  display: flex;\r\n  flex-direction: row;\r\n  height: calc(100vh - 40px);\r\n\r\n  .pdf-viewer {\r\n    position: relative;\r\n    width: 100%;\r\n  }\r\n\r\n  .pdf-viewer-thumbnail {\r\n    flex: 1 0 auto;\r\n    flex-basis: 160px;\r\n    max-height: 100vh;\r\n    overflow-y: auto;\r\n    display: flex;\r\n    justify-content: center;\r\n    background-color: rgb(245, 246, 247);\r\n  }\r\n}",
                     "styleUrl": "./pdf-example.component.scss"
                 }
             ],
@@ -445,7 +514,7 @@
             "implements": [
                 "OnInit"
             ],
-            "templateData": "<div class=\"wrapper\">\r\n  <div class=\"pdf-viewer-thumbnail\">\r\n    <ngx-pdf-thumbnail></ngx-pdf-thumbnail>\r\n  </div>\r\n  <div class=\"pdf-viewer\">\r\n    <ngx-pdf [src]=\"pdfSrc\"></ngx-pdf>\r\n  </div>\r\n</div>"
+            "templateData": "<div class=\"toolbar hstack gap-1 d-flex\">\r\n  <div class=\"p-1\">\r\n    <button class=\"btn\" (click)=\"onAddRectangle()\">Add rectangle</button>\r\n  </div>\r\n  <div class=\"vr\"></div>\r\n  <div class=\"p-1\">\r\n    <button class=\"btn\" (click)=\"zoomIn()\">Zoom in</button>\r\n    <button class=\"btn\" (click)=\"zoomOut()\">Zoom out</button>\r\n  </div>\r\n  <div class=\"vr\"></div>\r\n  <div class=\"p-1\">\r\n    <button class=\"btn\" (click)=\"previous()\">Previous page</button>\r\n    <span>{{page()}}</span>\r\n    <button class=\"btn\" (click)=\"next()\">Next page</button>\r\n  </div>\r\n</div>\r\n<div class=\"wrapper\">\r\n  <div class=\"pdf-viewer-thumbnail\">\r\n    <ngx-pdf-thumbnail></ngx-pdf-thumbnail>\r\n  </div>\r\n  <div class=\"pdf-viewer\">\r\n    <ngx-pdf [src]=\"pdfSrc\"></ngx-pdf>\r\n  </div>\r\n</div>\r\n<ngx-drawable-layer></ngx-drawable-layer>"
         }
     ],
     "modules": [],
@@ -485,7 +554,7 @@
                 "name": "Primary",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/stories/materials/carousel/carousel.stories.ts",
+                "file": "src/stories/materials/modal/modal.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "",
@@ -495,7 +564,7 @@
                 "name": "Primary",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/stories/materials/modal/modal.stories.ts",
+                "file": "src/stories/materials/carousel/carousel.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "",
@@ -525,16 +594,6 @@
                 "name": "Template",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/stories/materials/carousel/carousel.stories.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "StoryFn<CarouselExampleComponent>",
-                "defaultValue": "(args: CarouselExampleComponent) => ({\n  props: args\n})"
-            },
-            {
-                "name": "Template",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/stories/materials/modal/modal.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
@@ -545,11 +604,39 @@
                 "name": "Template",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
+                "file": "src/stories/materials/carousel/carousel.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "StoryFn<CarouselExampleComponent>",
+                "defaultValue": "(args: CarouselExampleComponent) => ({\n  props: args\n})"
+            },
+            {
+                "name": "Template",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
                 "file": "src/stories/materials/offcanvas/offcanvas.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "StoryFn<OffcanvasExampleComponent>",
                 "defaultValue": "(args: OffcanvasExampleComponent) => ({\n  props: args\n})"
+            },
+            {
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/components/pdf-example/pdf-example.component.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "PageEvent"
+            },
+            {
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/app/components/pdf-example/pdf-example.component.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "",
+                "defaultValue": "ZoomEvent"
             }
         ],
         "functions": [],
@@ -602,28 +689,6 @@
                     "defaultValue": "(args: PdfExampleComponent) => ({\n  props: args,\n})"
                 }
             ],
-            "src/stories/materials/carousel/carousel.stories.ts": [
-                {
-                    "name": "Primary",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/stories/materials/carousel/carousel.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "",
-                    "defaultValue": "Template.bind({})"
-                },
-                {
-                    "name": "Template",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/stories/materials/carousel/carousel.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "StoryFn<CarouselExampleComponent>",
-                    "defaultValue": "(args: CarouselExampleComponent) => ({\n  props: args\n})"
-                }
-            ],
             "src/stories/materials/modal/modal.stories.ts": [
                 {
                     "name": "Primary",
@@ -646,6 +711,28 @@
                     "defaultValue": "(args: ModalExampleComponent) => ({\n  props: args\n})"
                 }
             ],
+            "src/stories/materials/carousel/carousel.stories.ts": [
+                {
+                    "name": "Primary",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/materials/carousel/carousel.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "Template.bind({})"
+                },
+                {
+                    "name": "Template",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/materials/carousel/carousel.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "StoryFn<CarouselExampleComponent>",
+                    "defaultValue": "(args: CarouselExampleComponent) => ({\n  props: args\n})"
+                }
+            ],
             "src/stories/materials/offcanvas/offcanvas.stories.ts": [
                 {
                     "name": "Primary",
@@ -666,6 +753,26 @@
                     "deprecationMessage": "",
                     "type": "StoryFn<OffcanvasExampleComponent>",
                     "defaultValue": "(args: OffcanvasExampleComponent) => ({\n  props: args\n})"
+                }
+            ],
+            "src/app/components/pdf-example/pdf-example.component.ts": [
+                {
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/components/pdf-example/pdf-example.component.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "PageEvent"
+                },
+                {
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/app/components/pdf-example/pdf-example.component.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "",
+                    "defaultValue": "ZoomEvent"
                 }
             ]
         },
@@ -740,7 +847,25 @@
                 "linktype": "component",
                 "name": "PdfExampleComponent",
                 "coveragePercent": 0,
-                "coverageCount": "0/8",
+                "coverageCount": "0/14",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/pdf-example/pdf-example.component.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/app/components/pdf-example/pdf-example.component.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
                 "status": "low"
             },
             {

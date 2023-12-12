@@ -1,0 +1,86 @@
+:host {
+  position: absolute;
+  cursor: pointer;
+  top: calc(var(--scale-factor) * var(--top));
+  left: calc(var(--scale-factor) * var(--left));
+  width: calc(var(--scale-factor) * var(--width));
+  height: calc(var(--scale-factor) * var(--height));
+  box-sizing: border-box;
+  z-index: 2;
+
+  .rectangle-wrapper {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .rectangle-remove {
+    position: absolute;
+    top: 0;
+    display: block;
+    padding: 0 6px;
+    background-color: red;
+    right: 0px;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 0.075s, opacity 1s linear;
+  }
+
+  .rectangle-resize {
+    position: absolute;
+    background: blue;
+    width: 10px;
+    height: 10px;
+    bottom: 0;
+    right: 0;
+    cursor: nw-resize;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 0.075s, opacity 1s linear;
+  }
+
+  .rectangle-resizing-left .rectangle-resize {
+    left: 0;
+    right: auto;
+  }
+
+  .rectangle-resizing-top .rectangle-resize {
+    top: 0;
+    bottom: auto;
+  }
+
+  .rectangle-title {
+    background-color: yellow;
+    padding: 4px 8px;
+    box-sizing: border-box;
+    position: absolute;
+    font-size: 12px;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 0.075s, opacity 1s linear;
+  }
+
+  &.is-hover {
+    &:not(.is-moving) {
+      &:not(.is-resizing) {
+
+        .rectangle-remove,
+        .rectangle-resize,
+        .rectangle-title {
+          visibility: visible;
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  &.is-resizing {
+    .rectangle-resize {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}

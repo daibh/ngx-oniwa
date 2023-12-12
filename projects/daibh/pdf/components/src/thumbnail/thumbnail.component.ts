@@ -41,8 +41,8 @@ const MAX_NUM_SCALING_STEPS = 3;
 export class PdfThumbnailComponent implements OnInit, OnDestroy {
   private readonly _destroySubject$ = new Subject<void>();
   private readonly _service = inject(PdfService);
-  private readonly _docLoaded$ = this._service.observe<IDocumentLoaded>(LoadEvent.documentloaded);
-  private readonly _pageChanged$ = this._service.observe<{ pageNumber: number }>(PageEvent.pageChanged);
+  private readonly _docLoaded$ = this._service.observe<IDocumentLoaded, unknown>(LoadEvent.documentloaded);
+  private readonly _pageChanged$ = this._service.observe<{ pageNumber: number }, unknown>(PageEvent.pageChanged);
   private readonly _thumbnails: { page: number, thumbnailSrc: string }[] = [];
   private readonly _defaultWidth = 98;
   private readonly _syncCurrentPage = ({ pageNumber }: { pageNumber: number }) => this._currentPage = pageNumber;
@@ -65,7 +65,7 @@ export class PdfThumbnailComponent implements OnInit, OnDestroy {
   }
 
   get thumbnails() {
-    return this._thumbnails || [];
+    return (this._thumbnails || []).sort((a, b) => a.page - b.page);
   }
 
   get tempCanvas(): HTMLCanvasElement {

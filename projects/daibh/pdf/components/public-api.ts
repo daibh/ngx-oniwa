@@ -3,3 +3,4 @@
  */
 
 export * from './src/thumbnail/thumbnail.component';
+export * from './src/drawable-layer';

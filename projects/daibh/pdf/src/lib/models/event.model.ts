@@ -1,7 +1,7 @@
 
 export type PdfEvent = IntenalEvent | ResourceEvent | LoadEvent | ViewModeEvent | PageEvent | ZoomEvent | RotationEvent | AnotationEvent;
-export interface IPdfEvent {
-  name: PdfEvent;
+export interface IPdfEvent<T> {
+  name: PdfEvent | T;
   details: Record<string, unknown>;
 }
 

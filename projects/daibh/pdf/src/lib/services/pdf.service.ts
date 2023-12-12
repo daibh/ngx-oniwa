@@ -5,17 +5,17 @@ import { isDefined } from '@daibh/cdk/operators';
 
 @Injectable({ providedIn: 'root' })
 export class PdfService {
-  private readonly _eventsSubject$ = new BehaviorSubject<IPdfEvent | undefined>(undefined);
-  private _events$: Observable<IPdfEvent>;
+  private readonly _eventsSubject$ = new BehaviorSubject<IPdfEvent<unknown> | undefined>(undefined);
+  private _events$: Observable<IPdfEvent<unknown>>;
 
-  get events$(): Observable<IPdfEvent> {
+  get events$(): Observable<IPdfEvent<unknown>> {
     return this._events$;
   }
 
   constructor() {
     this._events$ = this._eventsSubject$.asObservable().pipe(
       // filter to exclude undefined or null values from observable
-      filter(event => isDefined(event)) as OperatorFunction<IPdfEvent | undefined, IPdfEvent>,
+      filter(event => isDefined(event)) as OperatorFunction<IPdfEvent<unknown> | undefined, IPdfEvent<unknown>>,
       // share observe to multiple observable
       // share()
     );
@@ -26,7 +26,7 @@ export class PdfService {
    * @param eventName name of event
    * @returns observe of event
    */
-  observe<T>(eventName: PdfEvent): Observable<T> {
+  observe<T, V>(eventName: PdfEvent | V): Observable<T> {
     return this.events$.pipe(
       // filter all sequense value has name matching with input eventName
       filter(({ name }) => name === eventName),
@@ -39,7 +39,7 @@ export class PdfService {
    * dispatch a pdf event
    * @param event IPdfEvent
    */
-  dispatch(event: IPdfEvent): void {
+  dispatch(event: IPdfEvent<unknown>): void {
     this._eventsSubject$.next(event);
   }
 }

@@ -1,3 +1,19 @@
+<div class="toolbar hstack gap-1 d-flex">
+  <div class="p-1">
+    <button class="btn" (click)="onAddRectangle()">Add rectangle</button>
+  </div>
+  <div class="vr"></div>
+  <div class="p-1">
+    <button class="btn" (click)="zoomIn()">Zoom in</button>
+    <button class="btn" (click)="zoomOut()">Zoom out</button>
+  </div>
+  <div class="vr"></div>
+  <div class="p-1">
+    <button class="btn" (click)="previous()">Previous page</button>
+    <span>{{page()}}</span>
+    <button class="btn" (click)="next()">Next page</button>
+  </div>
+</div>
 <div class="wrapper">
   <div class="pdf-viewer-thumbnail">
     <ngx-pdf-thumbnail></ngx-pdf-thumbnail>
@@ -6,3 +22,4 @@
     <ngx-pdf [src]="pdfSrc"></ngx-pdf>
   </div>
 </div>
+<ngx-drawable-layer></ngx-drawable-layer>

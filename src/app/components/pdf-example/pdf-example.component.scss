@@ -1,6 +1,14 @@
+@import "bootstrap/scss/bootstrap";
+
+.toolbar {
+  height: 40px;
+  --bs-border-width: 1px;
+}
+
 .wrapper {
   display: flex;
   flex-direction: row;
+  height: calc(100vh - 40px);
 
   .pdf-viewer {
     position: relative;

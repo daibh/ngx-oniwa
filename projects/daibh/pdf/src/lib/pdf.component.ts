@@ -46,7 +46,7 @@ export class PdfComponent implements OnInit, OnChanges {
   private readonly _eventBus = new EventBus();
   private readonly _linkService = new PDFLinkService({ eventBus: this._eventBus });
   private readonly _findController = new PDFFindController({ eventBus: this._eventBus, linkService: this._linkService });
-  private readonly _events$: Observable<IPdfEvent> = this._service.events$.pipe(takeUntil(this._destroySubject$));
+  private readonly _events$: Observable<IPdfEvent<unknown>> = this._service.events$.pipe(takeUntil(this._destroySubject$));
   private _config: IPdfConfig = defaultInitConfig;
   private _viewer: PDFViewer;
   private _mainContainer: HTMLDivElement;
@@ -57,7 +57,7 @@ export class PdfComponent implements OnInit, OnChanges {
   private _isGrabToPan: boolean;
   private _downloadComplete: boolean;
 
-  private get events$(): Observable<IPdfEvent> {
+  private get events$(): Observable<IPdfEvent<unknown>> {
     return this._events$;
   }
 
@@ -120,7 +120,7 @@ export class PdfComponent implements OnInit, OnChanges {
 
     fromEvent<{ source: PDFPageView, pageNumber: number, error: unknown }>(this._eventBus, 'pagerendered').pipe(
       takeUntil(this._destroySubject$),
-      tap(details => this._service.dispatch({ name: pageRendered, details }))
+      tap(details => this._service.dispatch({ name: pageRendered, details: { ...details, currentPage: this._viewer.currentPageNumber } }))
     ).subscribe();
 
     fromEvent<{ source: PDFPageView, pageNumber: number, pdfPage: unknown }>(this._eventBus, 'thumbnailrendered').pipe(
