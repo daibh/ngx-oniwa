@@ -1,7 +1,5 @@
 <div class="toolbar hstack gap-1 d-flex">
-  <div class="p-1">
-    <button class="btn" (click)="onAddRectangle()">Add rectangle</button>
-  </div>
+  <button class="btn" (click)="addRectangle()">Add rectangle</button>
   <div class="vr"></div>
   <div class="p-1">
     <button class="btn" (click)="zoomIn()">Zoom in</button>
@@ -12,6 +10,22 @@
     <button class="btn" (click)="previous()">Previous page</button>
     <span>{{page()}}</span>
     <button class="btn" (click)="next()">Next page</button>
+  </div>
+  <div class="vr"></div>
+  <div class="p-1">
+    <button class="btn" (click)="rotateCw()">Rotate Clockwise</button>
+    <button class="btn" (click)="rotateCcw()">Rotate Counterclockwise</button>
+  </div>
+  <div class="vr"></div>
+  <div class="p-1">
+    <button class="btn" (click)="loadLightPdf()">Load light pdf</button>
+    <button class="btn" (click)="loadHeavyPdf()">Load heavy pdf</button>
+    <ng-template let-progress [ngIf]="progress()">
+      <span class="loading-progress" *ngIf="progress.loaded < progress.total">
+        <strong>Loaded:</strong>
+        <span>{{progress.loaded}}</span> / <span>{{progress.total}}</span>
+      </span>
+    </ng-template>
   </div>
 </div>
 <div class="wrapper">

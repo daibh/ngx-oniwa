@@ -1,12 +1,15 @@
 import { Component, Input, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AnotationEvent, PageEvent, PdfComponent, PdfService, ResourceEvent, ZoomEvent } from '@daibh/pdf';
+import { AnotationEvent, LoadEvent, PageEvent, PdfComponent, PdfService, ResourceEvent, RotationEvent, ZoomEvent } from '@daibh/pdf';
 import { DrawableLayerComponent, PdfThumbnailComponent, RectangleEvent } from '@daibh/pdf/components';
 import { FormsModule } from '@angular/forms';
-import { Subject, map, takeUntil, tap } from 'rxjs';
+import { Subject, takeUntil, tap } from 'rxjs';
 
+const { loadingProgress } = LoadEvent;
+const { addRectangle } = RectangleEvent;
 const { prevPage, nextPage, pageChanged } = PageEvent;
 const { zoomIn, zoomOut } = ZoomEvent;
+const { rotateLeft, rotateRight } = RotationEvent;
 
 @Component({
   selector: 'storybook-pdf-viewer-example',
@@ -25,6 +28,7 @@ export class PdfExampleComponent implements OnInit {
   private readonly _pdfService = inject(PdfService);
   private readonly _destroy$ = new Subject();
   readonly page = signal(1);
+  readonly progress = signal({ loaded: 0, total: 0 });
 
   @Input() lightSrc: string;
   @Input() heavySrc: string;
@@ -33,6 +37,12 @@ export class PdfExampleComponent implements OnInit {
 
   ngOnInit(): void {
     this.pdfSrc = this.lightSrc;
+
+    this._pdfService.observe(loadingProgress).pipe(
+      takeUntil(this._destroy$),
+      tap(data => this.progress.update(() => data as { loaded: number, total: number }))
+    ).subscribe();
+
     this._pdfService.observe(AnotationEvent.anotationChanged).pipe(
       takeUntil(this._destroy$),
       tap(_ => {
@@ -48,16 +58,21 @@ export class PdfExampleComponent implements OnInit {
     ).subscribe();
   }
 
-  onAddStamp(): void {
-    this._pdfService.dispatch({ name: AnotationEvent.createStamp, details: {} });
+  loadLightPdf(): void {
+    this.pdfSrc = this.lightSrc;
   }
 
-  onAddRectangle(): void {
+  loadHeavyPdf(): void {
+    this.pdfSrc = this.heavySrc;
+  }
+
+  addRectangle(): void {
     this._pdfService.dispatch({
-      name: RectangleEvent.addRectangle, details: {
+      name: addRectangle,
+      details: {
         rectangle: {
-          name: 'test-rectangle-123',
-          title: 'Pagination',
+          name: `test-rectangle-${(new Date()).getTime()}`,
+          title: `Rect ${(new Date()).getTime()}`,
           style: {
             borderColor: 'red',
             borderStyle: 'solid',
@@ -72,6 +87,14 @@ export class PdfExampleComponent implements OnInit {
         }
       }
     });
+  }
+
+  rotateCw(): void {
+    this._pdfService.dispatch({ name: rotateRight, details: {} });
+  }
+
+  rotateCcw(): void {
+    this._pdfService.dispatch({ name: rotateLeft, details: {} });
   }
 
   zoomIn(): void {
