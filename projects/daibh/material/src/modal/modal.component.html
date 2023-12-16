@@ -6,11 +6,11 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="dismiss()"></button>
       </div>
       <div class="modal-body">
-        ...
+        <ng-content select=".modal-body"></ng-content>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
+        <button type="button" class="btn btn-secondary" (click)="dismiss()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="dismiss()">Understood</button>
       </div>
     </div>
   </div>

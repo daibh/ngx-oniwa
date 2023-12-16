@@ -13,65 +13,227 @@
     display: block;
     width: 100%;
     height: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
+
+    .rectangle-hint {
+      background-color: #dedede;
+      padding: 6px 12px 6px 12px;
+      box-sizing: border-box;
+      position: absolute;
+      font-size: 12px;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s 0.075s, opacity 1s linear;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      border-radius: 8px;
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 6px 0px;
+      max-width: 160px;
+      width: max-content;
+
+      &>.rectangle-remove {
+        position: relative;
+        display: block;
+        padding: 0 6px;
+        width: 12px;
+        height: 12px;
+
+        &::before,
+        &::after {
+          position: absolute;
+          left: 15px;
+          content: ' ';
+          height: 12px;
+          width: 2px;
+          background-color: #333;
+        }
+
+        &::before {
+          transform: rotate(45deg)
+        }
+
+        &::after {
+          transform: rotate(-45deg)
+        }
+
+      }
+
+      &>.rectangle-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-height: 40px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        flex: 1;
+      }
+    }
+
+    .rectangle-resizers {
+      position: absolute;
+      inset: 0;
+
+      &>.rectangle-resize {
+        position: absolute;
+        background: blue;
+        width: var(--zone-resize-size);
+        height: var(--zone-resize-size);
+        bottom: 0;
+        right: 0;
+        cursor: nw-resize;
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s 0.075s, opacity 1s linear;
+        --zone-resize-size: 6px;
+
+        &[data-position=top-left] {
+          top: calc((0px - var(--zone-resize-size) * 0.5));
+          left: calc((0px - var(--zone-resize-size) * 0.5));
+          cursor: nw-resize;
+        }
+
+        &[data-position=top-middle] {
+          top: calc((0px - var(--zone-resize-size) * 0.5));
+          left: calc(50% + (0px - var(--zone-resize-size) * 0.5));
+          cursor: ns-resize;
+        }
+
+        &[data-position=top-right] {
+          top: calc((0px - var(--zone-resize-size) * 0.5));
+          right: calc((0px - var(--zone-resize-size) * 0.5));
+          cursor: ne-resize;
+        }
+
+        &[data-position=middle-left] {
+          top: calc(50% + (0px - var(--zone-resize-size) * 0.5));
+          left: calc((0px - var(--zone-resize-size) * 0.5));
+          cursor: ew-resize;
+        }
+
+        &[data-position=middle-right] {
+          top: calc(50% + (0px - var(--zone-resize-size) * 0.5));
+          right: calc((0px - var(--zone-resize-size) * 0.5));
+          cursor: ew-resize;
+        }
+
+        &[data-position=bottom-left] {
+          bottom: calc((0px - var(--zone-resize-size) * 0.5));
+          left: calc((0px - var(--zone-resize-size) * 0.5));
+          cursor: sw-resize;
+        }
+
+        &[data-position=bottom-middle] {
+          bottom: calc((0px - var(--zone-resize-size) * 0.5));
+          left: calc(50% + (0px - var(--zone-resize-size) * 0.5));
+          cursor: ns-resize;
+        }
+
+        &[data-position=bottom-right] {
+          bottom: calc((0px - var(--zone-resize-size) * 0.5));
+          right: calc((0px - var(--zone-resize-size) * 0.5));
+          cursor: se-resize;
+        }
+
+      }
+    }
+
+    &::after {
+      visibility: hidden;
+      opacity: 0;
+      color: #dedede;
+      content: '';
+      display: block;
+      width: 4px;
+      height: 4px;
+      background: currentColor;
+      position: absolute;
+      border-right: 2px solid currentcolor;
+      border-bottom: 2px solid currentcolor;
+      transform: rotate(45deg);
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 6px 0px;
+      transition: visibility 0s 0.075s, opacity 1s linear;
+    }
+
+    &[data-title-position=top] {
+      &::after {
+        top: -12px;
+        left: calc(50% - 5px);
+        border-right: 2px solid currentcolor;
+        border-bottom: 2px solid currentcolor;
+        transform: rotate(45deg);
+      }
+
+      .rectangle-hint {
+        transform: translate(calc(var(--scale-factor) * var(--width) / 2 - 100% / 2), calc(-100% - 10px));
+      }
+    }
+
+    &[data-title-position=bottom] {
+      &::after {
+        bottom: -12px;
+        left: calc(50% - 3px);
+        border-right: 2px solid currentcolor;
+        border-bottom: 2px solid currentcolor;
+        transform: rotate(45deg);
+      }
+
+      .rectangle-hint {
+        transform: translate(calc(var(--scale-factor) * var(--width) / 2 - 100% / 2), calc(var(--scale-factor) * var(--height) + 8px));
+      }
+    }
+
+    &[data-title-position=left] {
+      &::after {
+        top: calc(50% + -2px);
+        left: calc(0px - 12px);
+        border-right: 2px solid currentcolor;
+        border-bottom: 2px solid currentcolor;
+        transform: rotate(45deg);
+      }
+
+      .rectangle-hint {
+        transform: translate(calc(-100% - 10px), calc(var(--scale-factor) * var(--height) / 2 - 100% / 2));
+      }
+    }
+
+    &[data-title-position=right] {
+      &::after {
+        top: calc(50% + -2px);
+        left: calc(100% + 7px);
+        border-right: 2px solid currentcolor;
+        border-bottom: 2px solid currentcolor;
+        transform: rotate(45deg);
+      }
+
+      .rectangle-hint {
+        transform: translate(calc(var(--scale-factor) * var(--width) + 8px), calc(var(--scale-factor) * var(--height) / 2 - 100% / 2));
+      }
+    }
   }
 
-  .rectangle-remove {
-    position: absolute;
-    top: 0;
-    display: block;
-    padding: 0 6px;
-    background-color: red;
-    right: 0px;
-    visibility: hidden;
-    opacity: 0;
-    transition: visibility 0s 0.075s, opacity 1s linear;
-  }
-
-  .rectangle-resize {
-    position: absolute;
-    background: blue;
-    width: 10px;
-    height: 10px;
-    bottom: 0;
-    right: 0;
-    cursor: nw-resize;
-    visibility: hidden;
-    opacity: 0;
-    transition: visibility 0s 0.075s, opacity 1s linear;
-  }
-
-  .rectangle-resizing-left .rectangle-resize {
-    left: 0;
-    right: auto;
-  }
-
-  .rectangle-resizing-top .rectangle-resize {
-    top: 0;
-    bottom: auto;
-  }
-
-  .rectangle-title {
-    background-color: yellow;
-    padding: 4px 8px;
-    box-sizing: border-box;
-    position: absolute;
-    font-size: 12px;
-    visibility: hidden;
-    opacity: 0;
-    transition: visibility 0s 0.075s, opacity 1s linear;
-  }
-
-  &.is-hover {
+  &.is-hover,
+  &.is-selected {
     &:not(.is-moving) {
       &:not(.is-resizing) {
 
-        .rectangle-remove,
-        .rectangle-resize,
-        .rectangle-title {
-          visibility: visible;
-          opacity: 1;
+        .rectangle-wrapper {
+
+          .rectangle-resize,
+          .rectangle-title,
+          .rectangle-hint,
+          &::after {
+            visibility: visible;
+            opacity: 1;
+          }
+
+          .rectangle-remove {
+            visibility: visible;
+            opacity: 1;
+
+            &:not(:hover) {
+              opacity: 0.6;
+            }
+          }
         }
       }
     }

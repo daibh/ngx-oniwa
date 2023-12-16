@@ -28,5 +28,58 @@ export interface IRectangle {
   style: IStyle;
   viewport: IViewport;
   page?: number;
+  selected?: boolean;
   [key: string]: unknown;
+}
+
+export type ResizeType = 'top-left' | 'top-middle' | 'top-right' | 'middle-left' | 'bottom-left' | 'bottom-middle' | 'bottom-right';
+export const ResizePosition = {
+  ['top-left']: {
+    isDiagonal: true,
+    isHorizontal: false,
+    getPoint: (w: number, h: number): [number, number] => [0, 0],
+    getOpposite: (w: number, h: number): [number, number] => [w, h]
+  },
+  ['top-middle']: {
+    isDiagonal: false,
+    isHorizontal: false,
+    getPoint: (w: number, h: number): [number, number] => [w / 2, 0],
+    getOpposite: (w: number, h: number): [number, number] => [w / 2, h]
+  },
+  ['top-right']: {
+    isDiagonal: true,
+    isHorizontal: false,
+    getPoint: (w: number, h: number): [number, number] => [w, 0],
+    getOpposite: (w: number, h: number): [number, number] => [0, h]
+  },
+  ['middle-left']: {
+    isDiagonal: false,
+    isHorizontal: true,
+    getPoint: (w: number, h: number): [number, number] => [0, h / 2],
+    getOpposite: (w: number, h: number): [number, number] => [w, h / 2]
+  },
+  ['middle-right']: {
+    isDiagonal: false,
+    isHorizontal: true,
+    getPoint: (w: number, h: number): [number, number] => [w, h / 2],
+    getOpposite: (w: number, h: number): [number, number] => [0, h / 2]
+  },
+  ['bottom-left']: {
+    isDiagonal: true,
+    isHorizontal: false,
+    getPoint: (w: number, h: number): [number, number] => [0, h],
+    getOpposite: (w: number, h: number): [number, number] => [w, 0]
+  },
+  ['bottom-middle']: {
+    isDiagonal: false,
+    isHorizontal: false,
+    getPoint: (w: number, h: number): [number, number] => [w / 2, h],
+    getOpposite: (w: number, h: number): [number, number] => [w / 2, 0]
+  },
+  ['bottom-right']: {
+    isDiagonal: true,
+    isHorizontal: false,
+    getPoint: (w: number, h: number): [number, number] => [w, h],
+    getOpposite: (w: number, h: number): [number, number] => [0, 0]
+  },
 }

@@ -1,31 +1,43 @@
 import { Component, DestroyRef, ElementRef, Input, OnInit, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { PdfService } from '@daibh/pdf';
-import { fromEvent, map, pairwise, switchMap, takeUntil, takeWhile, tap } from "rxjs";
-import { IRectangle, IStyle, IViewport } from "../../models/rectangle.model";
+import { filter, fromEvent, map, merge, pairwise, switchMap, takeUntil, takeWhile, tap } from "rxjs";
+import { IRectangle, IStyle, IViewport, ResizePosition, ResizeType } from "../../models/rectangle.model";
 import { RectangleEvent } from "../../models/event.model";
-const { removeRectangle, rectangleResized, rectangleMoved } = RectangleEvent;
+const { removeRectangle, rectangleResized, rectangleMoved, rectangleSelected } = RectangleEvent;
 
 @Component({
   selector: 'ngx-rectangle',
   template: `
-    <div class="rectangle-wrapper">
-      <span class="rectangle-title">{{details.title}}</span>
-      <i class="rectangle-remove">x</i>
-      <i class="rectangle-resize"></i>
+    <div class="rectangle-wrapper" [attr.data-title-position]="titlePosition">
+      <div class="rectangle-hint">
+        <span class="rectangle-title">{{details.title}}</span>
+        <i class="rectangle-remove"></i>
+      </div>
+      <div class="rectangle-resizers">
+        <i class="rectangle-resize" data-position="top-left"></i>
+        <i class="rectangle-resize" data-position="top-middle"></i>
+        <i class="rectangle-resize" data-position="top-right"></i>
+        <i class="rectangle-resize" data-position="middle-left"></i>
+        <i class="rectangle-resize" data-position="middle-right"></i>
+        <i class="rectangle-resize" data-position="bottom-left"></i>
+        <i class="rectangle-resize" data-position="bottom-middle"></i>
+        <i class="rectangle-resize" data-position="bottom-right"></i>
+      </div>
     </div>
   `,
   host: {
     '[class.rectangle]': 'true',
+    '[class.is-selected]': 'isSelected',
     '[class.is-hover]': 'isHover()',
     '[class.is-resizing]': 'isResize()',
     '[class.is-moving]': 'isMoving()',
     '[class.is-resizing-left]': 'isLeftSideResizing()',
     '[class.is-resizing-top]': 'isTopSideResizing()',
-    '[style.--left.px]': 'viewport.x',
-    '[style.--top.px]': 'viewport.y',
-    '[style.--width.px]': 'viewport.w',
-    '[style.--height.px]': 'viewport.h',
+    '[style.--left.px]': 'x',
+    '[style.--top.px]': 'y',
+    '[style.--width.px]': 'w',
+    '[style.--height.px]': 'h',
     '[style.borderColor]': 'style.borderColor',
     '[style.borderWidth]': 'style.borderWidth',
     '[style.borderStyle]': 'style.borderStyle',
@@ -41,8 +53,11 @@ export class RectangleComponent implements OnInit {
   private readonly _ownerDocument = this._nativeElement.ownerDocument;
   private _mainContainer: HTMLDivElement;
   private _viewerContainer: HTMLDivElement;
-  private _resizeStartPoint: DOMRect;
-  private _resizeStartViewport: IViewport;
+  private _details: IRectangle;
+  private _x: number;
+  private _y: number;
+  private _w: number;
+  private _h: number;
 
   readonly isHover = signal(false);
   readonly isGrab = signal(false);
@@ -50,8 +65,19 @@ export class RectangleComponent implements OnInit {
   readonly isMoving = signal(false);
   readonly isLeftSideResizing = signal(false);
   readonly isTopSideResizing = signal(false);
+  readonly pageRotation = signal(0);
+  readonly resizeType = signal<ResizeType | undefined>(undefined);
+  readonly startGrabScrollTop = signal(0);
+  readonly startGrabScrollLeft = signal(0);
+  readonly grabTop = signal(0);
+  readonly grabLeft = signal(0);
 
-  @Input() details: IRectangle;
+  @Input() set details(value: IRectangle) {
+    this._details = value;
+    this.updateToDOM();
+  }
+
+  @Input() page: number;
 
   get mainContainer(): HTMLDivElement {
     if (!this._mainContainer) {
@@ -67,6 +93,14 @@ export class RectangleComponent implements OnInit {
     return this._viewerContainer;
   }
 
+  get parentElement(): HTMLElement {
+    return this._nativeElement.parentElement as HTMLElement;
+  }
+
+  get details(): IRectangle {
+    return this._details || {};
+  }
+
   get style(): IStyle {
     return this.details?.style || {};
   }
@@ -77,6 +111,42 @@ export class RectangleComponent implements OnInit {
 
   get scaleFactor(): number {
     return Number(this.viewerContainer.style.getPropertyValue('--scale-factor')) || 1;
+  }
+
+  get pageWidth(): number {
+    return this.coorWithoutScale(this.parentElement.clientWidth);
+  }
+
+  get pageHeight(): number {
+    return this.coorWithoutScale(this.parentElement.clientHeight);
+  }
+
+  get x(): number {
+    return this._x;
+  }
+
+  get y(): number {
+    return this._y;
+  }
+
+  get w(): number {
+    return this._w;
+  }
+
+  get h(): number {
+    return this._h;
+  }
+
+  get isSelected(): boolean {
+    return !!this.details.selected;
+  }
+
+  get titlePosition(): 'left' | 'top' | 'right' | 'bottom' {
+    if (this.x < 200 || this.pageWidth - this.coorWithoutScale(this.w + this.x) < 200) {
+      return this.y < 50 || this.pageHeight - this.coorWithoutScale(this.h + this.y) < 50 ? 'right' : 'top';
+    }
+
+    return this.y < 50 || this.pageHeight - this.coorWithoutScale(this.h + this.y) ? 'left' : 'bottom';
   }
 
   ngOnInit(): void {
@@ -107,56 +177,201 @@ export class RectangleComponent implements OnInit {
      * when mouse down by left button on zone when it is not moving the resize zone event will occurs
      * the resize zone event will complete when mouse up, mouse leave out of document or when main container is scrolled
      */
-    fromEvent(this._nativeElement.querySelector('.rectangle-resize')!, 'mousedown').pipe(
+    fromEvent(this._nativeElement.querySelectorAll('.rectangle-resize')!, 'pointerdown').pipe(
       takeUntilDestroyed(this._destroyRef),
       takeWhile(evt => !this.isGrab() && (evt as MouseEvent).button === 0),
       map(evt => evt as MouseEvent),
       tap(evt => this.markAsResizing(evt)),
-      switchMap(() => fromEvent(this._ownerDocument, 'mousemove').pipe(
+      switchMap(() => fromEvent(this._ownerDocument, 'pointermove', { passive: true, capture: true }).pipe(
         map(evt => evt as MouseEvent),
-        takeUntil(fromEvent(this._ownerDocument, 'mouseup').pipe(tap(() => this.markAsEndResizing()))),
+        takeUntil(fromEvent(this._ownerDocument, 'pointerup').pipe(tap(() => this.markAsEndResizing()))),
+        takeUntil(fromEvent(this._ownerDocument, 'pointerleave').pipe(tap(() => this.markAsEndResizing()))),
         takeUntil(fromEvent(this._ownerDocument, 'mouseleave').pipe(tap(() => this.markAsEndResizing()))),
         takeUntil(fromEvent(this.mainContainer, 'scroll').pipe(tap(() => this.markAsEndResizing()))),
-        tap((curr) => {
+        tap((evt) => {
 
-          // detect the strategy of resize
-          this.detectResizingStrategy(curr);
-          // compute coordinates for zone when resizing
-          const { nx, ny, nw, nh } = this.computeCoordinatesOnResize(curr);
+          const { isDiagonal, isHorizontal, getPoint, getOpposite } = ResizePosition[this.resizeType()!];
+          const { pageRotation, pageWidth, pageHeight } = this;
+          const savedX = this.x / pageWidth;
+          const savedY = this.y / pageHeight;
+          const savedWidth = this.w / pageWidth;
+          const savedHeight = this.h / pageHeight;
+          const minWidth = 16 / pageWidth;
+          const minHeight = 16 / pageHeight;
 
-          // new coordinates will reassign to viewport
-          this.viewport.x = nx;
-          this.viewport.y = ny;
-          this.viewport.w = nw;
-          this.viewport.h = nh;
+          const round = (x: number) => Math.round(x * 10000) / 10000;
+          const rotationMatrix = this._getResizeRotationMatrix(0);
+          const invRotationMatrix = this._getResizeRotationMatrix(0);
+          const transf = (maxtrix: [number, number, number, number], x: number, y: number) => [
+            maxtrix[0] * x + maxtrix[2] * y,
+            maxtrix[1] * x + maxtrix[3] * y,
+          ];
+
+          const point = getPoint(savedWidth, savedHeight);
+          const oppositePoint = getOpposite(savedWidth, savedHeight);
+          let transfOppositePoint = transf(rotationMatrix, ...oppositePoint);
+          const oppositeX = round(savedX + transfOppositePoint[0]);
+          const oppositeY = round(savedY + transfOppositePoint[1]);
+
+          let [deltaX, deltaY] = this._rotatePoint(
+            evt.movementX,
+            evt.movementY,
+            pageRotation()
+          );
+
+          [deltaX, deltaY] = transf(invRotationMatrix, this.coorWithoutScale(deltaX) / pageWidth, this.coorWithoutScale(deltaY) / pageHeight);
+
+          let [ratioX, ratioY] = this._getRatioOfResize(!!isDiagonal, !!isHorizontal, savedWidth, savedHeight, minWidth, minHeight, oppositePoint[0] - point[0] - deltaX, oppositePoint[1] - point[1] - deltaY);
+
+          const _newWidth = round(savedWidth * ratioX);
+          const _newHeight = round(savedHeight * ratioY);
+          transfOppositePoint = transf(rotationMatrix, ...getOpposite(_newWidth, _newHeight));
+          const _newX = oppositeX - transfOppositePoint[0];
+          const _newY = oppositeY - transfOppositePoint[1];
+
+          [this._x, this._y, this._w, this._h] = this._correctCoordinatesOnLayerWhenResizing({
+            x: _newX * pageWidth,
+            y: _newY * pageHeight,
+            w: (_newX < 0 ? savedWidth : _newWidth) * pageWidth, // to avoid reserve horizontal resizing
+            h: (_newY < 0 ? savedHeight : _newHeight) * pageHeight // to avoid reserve vertical resizing
+          });
+
         })
       ))
     ).subscribe();
 
     /**
+     * prevent user right click on zone to open context menu
+     */
+    fromEvent(this._nativeElement, 'contextmenu').pipe(
+      takeUntilDestroyed(this._destroyRef),
+      map(evt => evt as MouseEvent),
+      tap(evt => {
+        evt.preventDefault();
+        evt.stopPropagation();
+      })
+    ).subscribe();
+
+    /**
      * when mouse down by left button on zone without resize position the move zone event will occurs
      * the move zone event will complete when mouse up, mouse leave out of document or when main container is scrolled
+     * 
+     * TODO: moving when the viewport is rotated.
      */
-    fromEvent(this._nativeElement, 'mousedown').pipe(
+    fromEvent(this._nativeElement, 'pointerdown').pipe(
       takeUntilDestroyed(this._destroyRef),
-      takeWhile(evt => !this.isResize() && (evt as MouseEvent).button === 0),
       map(evt => evt as MouseEvent),
+      filter((evt) => !this.isResize() && evt.button === 0),
       tap(evt => this.markAsMoving(evt)),
-      switchMap(() => fromEvent(this._ownerDocument, 'mousemove').pipe(
-        map(_evt => _evt as MouseEvent),
-        takeUntil(fromEvent(this._ownerDocument, 'mouseup').pipe(tap(() => this.markAsEndMoving()))),
+      switchMap(() => merge( // captune both of mouse moving & mouse scrolling event
+        fromEvent(this._ownerDocument, 'pointermove', { passive: true, capture: true }),
+        fromEvent(this.mainContainer, 'scroll', { passive: true, capture: true })
+      ).pipe(
+        map((_evt) => _evt as MouseEvent),
+        takeUntil(fromEvent(this._ownerDocument, 'pointerup').pipe(tap(() => this.markAsEndMoving()))),
+        takeUntil(fromEvent(this._ownerDocument, 'pointerleave').pipe(tap(() => this.markAsEndMoving()))),
         takeUntil(fromEvent(this._ownerDocument, 'mouseleave').pipe(tap(() => this.markAsEndMoving()))),
-        takeUntil(fromEvent(this.mainContainer, 'scroll').pipe(tap(() => this.markAsEndMoving()))),
-        pairwise(),
-        tap(([prev, curr]) => {
-          // compute coordinates for new position of zone when mouse moving
-          const { nx, ny } = this.computeCoordinatesOnMove(prev, curr);
-          // new coordinates will reassign to viewport
-          this.viewport.x = nx;
-          this.viewport.y = ny;
+        tap(_evt => {
+
+          // in case user scroll when he were grabbing zone. the current movement will be kept from last moving
+          if (_evt.type !== 'scroll') {
+            this.grabTop.update(_ => _ + _evt.movementY);
+            this.grabLeft.update(_ => _ + _evt.movementX);
+          }
+
+          const [newX, newY] = this._transformPosition();
+
+          this._x = newX;
+          this._y = newY;
+
+          this._nativeElement.scrollIntoView({ block: 'nearest' });
         })
       ))
     ).subscribe();
+  }
+
+  private _getRatioOfResize(isDiagonal: boolean, isHorizontal: boolean, orgW: number, orgH: number, minW: number, minH: number, w: number, h: number): [number, number] {
+
+    if (!isDiagonal) {
+      return isHorizontal ? [this._getRatioOfResizeBy(orgW, minW, w), 1] : [1, this._getRatioOfResizeBy(orgH, minH, h)];
+    }
+
+    return [this._getRatioOfResizeBy(orgW, minW, w), this._getRatioOfResizeBy(orgH, minH, h)];
+  }
+
+  private _getRatioOfResizeBy(orgW: number, minW: number, w: number): number {
+    return Math.max(minW, Math.min(1, Math.abs(w))) / orgW;
+  }
+
+  /**
+   * transform location of zone on move
+   * @returns [left, top] coordinates of zone after transform
+   */
+  private _transformPosition(): [number, number] {
+    const { viewport, pageRotation, grabLeft, grabTop, startGrabScrollLeft, startGrabScrollTop } = this;
+    const { scrollLeft, scrollTop } = this.mainContainer;
+
+    const movementX = this.coorWithoutScale(grabLeft() + scrollLeft - startGrabScrollLeft());
+    const movementY = this.coorWithoutScale(grabTop() + scrollTop - startGrabScrollTop());
+
+    const [tx, ty] = this._rotatePoint(movementX, movementY, pageRotation());
+
+    return this._correctCoordinatesOnLayer({ x: viewport.x + tx, y: viewport.y + ty, w: viewport.w, h: viewport.h });
+  }
+
+  private _getResizeRotationMatrix(rotation: number): [number, number, number, number] {
+    const { pageWidth, pageHeight } = this;
+    switch (rotation) {
+      case 90:
+        return [0, -pageWidth / pageHeight, pageHeight / pageWidth, 0];
+      case 180:
+        return [-1, 0, 0, -1];
+      case 270:
+        return [0, pageWidth / pageHeight, -pageHeight / pageWidth, 0];
+      default:
+        return [1, 0, 0, 1];
+    }
+  }
+
+  /**
+   * rotate the [left, top] of zone when the viewport of page is set rotation
+   * @param x 
+   * @param y 
+   * @param angle 
+   * @returns 
+   */
+  private _rotatePoint(x: number, y: number, angle: number): [number, number] {
+    switch (angle) {
+      case 90:
+        return [y, -x];
+      case 180:
+        return [-x, -y];
+      case 270:
+        return [-y, x];
+      default:
+        return [x, y];
+    }
+  }
+
+  /**
+   * set coordinates of zone base on viewport of zone
+   */
+  private updateToDOM(): void {
+    const { x, y, w, h } = this.viewport;
+    this._x = x;
+    this._y = y;
+    this._w = w;
+    this._h = h;
+  }
+
+  /**
+   * fallback the coordinates of zone into viewport of zone
+   */
+  private syncToZone(): void {
+    this.viewport.x = this.x;
+    this.viewport.y = this.y;
+    this.viewport.w = this.w;
+    this.viewport.h = this.h;
   }
 
   /**
@@ -180,29 +395,8 @@ export class RectangleComponent implements OnInit {
    * @example {ny: 10, nh: 120} => new y = 10, new h = 120
    */
   private computeHorizontalOnResize(curr: MouseEvent, layerContainer: HTMLElement): { nx: number, nw: number } {
-    const { x, w } = this._resizeStartViewport;
-    const pageWidth = this.coorWithoutScale(layerContainer.clientWidth);
-    const cx = this.coorWithoutScale(curr.clientX - this._resizeStartPoint.left - this._resizeStartPoint.width);
-    if (this.isLeftSideResizing()) {
-      let nw = -(w + cx);
-      let nx = x - nw;
 
-      if (nx < 0) {
-        nw = nw + nx;
-        nx = 0;
-      }
-
-      return { nx, nw };
-    }
-
-    let nx = x;
-    let nw = w + cx;
-
-    if (nx + nw > pageWidth) {
-      nw = pageWidth - nx;
-    }
-
-    return { nx, nw };
+    return { nx: 0, nw: 0 };
   }
 
   /**
@@ -212,80 +406,82 @@ export class RectangleComponent implements OnInit {
    * @example {nx: 10, nw: 120} => new x = 10, new w = 120
    */
   private computeVerticalOnResize(curr: MouseEvent, layerContainer: HTMLElement): { ny: number, nh: number } {
-    const { y, h } = this._resizeStartViewport;
-    const pageHeight = this.coorWithoutScale(layerContainer.clientHeight);
-    const cy = this.coorWithoutScale(curr.clientY - this._resizeStartPoint.top - this._resizeStartPoint.height);
 
-    if (this.isTopSideResizing()) {
-      let nh = -(h + cy);
-      let ny = y - nh;
+    return { ny: 0, nh: 0 };
+  }
 
-      if (ny < 0) {
-        nh = nh + ny;
-        ny = 0;
-      }
+  private _correctCoordinatesOnLayerWhenResizing(viewport: IViewport): [number, number, number, number] {
+    const { pageRotation, pageWidth, pageHeight } = this;
+    let { x, y, w, h } = viewport;
 
-      return { ny, nh };
+    switch (pageRotation()) {
+      case 0:
+        x = Math.max(0, x);
+        y = Math.max(0, y);
+        w = Math.min(w, pageWidth - x);
+        h = Math.min(h, pageHeight - y);
+        break;
+      case 90:
+        x = Math.max(0, x);
+        y = Math.min(pageHeight, y);
+        w = Math.min(w, pageWidth - x);
+        h = Math.min(h, pageHeight - y);
+        break;
+      case 180:
+        x = Math.min(pageWidth, x);
+        y = Math.min(pageHeight, y);
+        w = Math.min(w, pageWidth - x);
+        h = Math.min(h, pageHeight - y);
+        break;
+      case 270:
+        x = Math.min(pageWidth, x);
+        y = Math.max(0, y);
+        w = Math.min(w, pageWidth - x);
+        h = Math.min(h, pageHeight - y);
+        break;
     }
 
-    let ny = y;
-    let nh = h + cy;
-
-    if (ny + nh > pageHeight) {
-      nh = pageHeight - ny;
-    }
-
-    return { ny, nh };
+    return [x, y, w, h];
   }
 
   /**
-   * compute the coordinates of zone after mouse move
-   * @param prev position before mouse move
-   * @param curr position current mouse
-   * @example // return {nx: 50, ny: 30}
-   * @param {nx} nx new coordinates of x
-   * @param {ny} ny new coordinates of y
+   * auto correct the coordinates of zone to fit within layer
+   * @param viewport 
+   * @returns 
    */
-  private computeCoordinatesOnMove(prev: MouseEvent, curr: MouseEvent): { nx: number, ny: number } {
-    const parentContainer = this._nativeElement.parentElement as HTMLElement;
-    const pageWidth = this.coorWithoutScale(parentContainer.clientWidth);
-    const pageHeight = this.coorWithoutScale(parentContainer.clientHeight);
-    const { cx, cy } = this.extractChange(prev, curr);
+  private _correctCoordinatesOnLayer(viewport: IViewport): [number, number] {
+    const { pageRotation, pageWidth, pageHeight } = this;
+    let { x, y, w, h } = viewport;
 
-    const { x, y, w, h } = this.viewport;
-
-    // we only need to update x & y of the zone viewport when zone moved. so we declare it with {let} keyword
-    let nx = x + cx;
-    let ny = y + cy;
-
-    // in case the zone move out left side of page, it should be reset to zero
-    if (nx < 0) {
-      nx = 0;
+    switch (pageRotation()) {
+      case 0:
+        x = Math.max(0, Math.min(pageWidth - w, x));
+        y = Math.max(0, Math.min(pageHeight - h, y));
+        break;
+      case 90:
+        x = Math.max(0, Math.min(pageWidth - h, x));
+        y = Math.min(pageHeight, Math.max(w, y));
+        break;
+      case 180:
+        x = Math.min(pageWidth, Math.max(w, x));
+        y = Math.min(pageHeight, Math.max(h, y));
+        break;
+      case 270:
+        x = Math.min(pageWidth, Math.max(h, x));
+        y = Math.max(0, Math.min(pageHeight - w, y));
+        break;
     }
 
-    // in case the zone move out right side of page, it should be reset to fit in page
-    if (nx + w > pageWidth) {
-      nx = pageWidth - w;
-    }
-
-    // in case the zone move above top side of page, it should be reset to zero
-    if (ny < 0) {
-      ny = 0;
-    }
-
-    // in case the zone move below bottom side of page, it should be reset to fit in page
-    if (ny + h > pageHeight) {
-      ny = pageHeight - h;
-    }
-
-    return { nx, ny };
+    return [x, y];
   }
 
   // setup some info of zone to mark it resizing
   private markAsResizing(evt: MouseEvent): void {
-    this.isResize.set(true);
-    this._resizeStartPoint = this._nativeElement.getBoundingClientRect();
-    this._resizeStartViewport = { ...this.viewport };
+    this.isResize.update(() => {
+      this.resizeType.set((evt.target as HTMLElement).dataset['position'] as ResizeType);
+      return true;
+    });
+
     evt.preventDefault();
     evt.stopPropagation();
     const focusedElement = document.activeElement as HTMLElement;
@@ -294,29 +490,32 @@ export class RectangleComponent implements OnInit {
     }
   }
 
-  /**
-   * detect the resizing strategy
-   * @param curr current mouse position
-   * @example on left side of zone before resizing, on top side of zone before resizing
-   */
-  private detectResizingStrategy = (curr: MouseEvent): void => {
-    this.isLeftSideResizing.update(() => curr.clientX < this._resizeStartPoint.left);
-    this.isTopSideResizing.update(() => curr.clientY < this._resizeStartPoint.top);
-  };
-
   // mark zone resizing is ended
   private markAsEndResizing(): void {
-    this.isResize.set(false);
-    this.isLeftSideResizing.set(false);
-    this.isTopSideResizing.set(false);
+    this.isResize.update(() => {
+      this.resizeType.set(undefined);
+      return false;
+    });
+
+    // sync coordinates of zone on the layer to the zone viewport
+    this.syncToZone();
     this._service.dispatch({ name: rectangleResized, details: { rectangle: this.details } });
   }
 
   // setup some info of zone to mark it resizing
   private markAsMoving(evt: MouseEvent): void {
-    this.isGrab.set(true);
     evt.preventDefault();
     evt.stopPropagation();
+
+    this.details.selected = true;
+    this.isGrab.set(true);
+    this.startGrabScrollTop.set(this.mainContainer.scrollTop);
+    this.startGrabScrollLeft.set(this.mainContainer.scrollLeft);
+    this.grabTop.set(0);
+    this.grabLeft.set(0);
+
+    this._service.dispatch({ name: rectangleSelected, details: { rectangle: this.details, page: this.page } });
+
     const focusedElement = document.activeElement as HTMLElement;
     if (focusedElement && !focusedElement.contains(evt.target as HTMLElement)) {
       focusedElement.blur();
@@ -326,7 +525,13 @@ export class RectangleComponent implements OnInit {
   // mark zone moving is ended
   private markAsEndMoving(): void {
     this.isGrab.set(false);
-    this._service.dispatch({ name: rectangleMoved, details: { rectangle: this.details } });
+    this.startGrabScrollTop.set(this.mainContainer.scrollTop);
+    this.startGrabScrollLeft.set(this.mainContainer.scrollLeft);
+
+    // sync coordinates of zone on the layer to the zone viewport
+    this.syncToZone();
+    // dispatch zone have been finished moving
+    this._service.dispatch({ name: rectangleMoved, details: { rectangle: this.details, page: this.page } });
   }
 
   /**
@@ -335,17 +540,9 @@ export class RectangleComponent implements OnInit {
    * @example //  coor = 40, scale factor = 1.5 => return value = 30 / 1.5 = 20
    */
   private coorWithoutScale = (coor: number): number => coor / this.scaleFactor;
-  /**
-   * extract the change between before & after postition of mouse to rect reference
-   * @param before before position
-   * @param after after position
-   * @example // return {cx: 5; cy: 5}
-   * @param {number} cx the change of x
-   * @param {number} cy the change of y
-   */
-  private extractChange = (before: MouseEvent, after: MouseEvent): { cx: number; cy: number } => ({
-    cx: this.coorWithoutScale(after.clientX - before.clientX),
-    cy: this.coorWithoutScale(after.clientY - before.clientY)
-  });
+
+  ngOnDestroy(): void {
+    console.log('ngOnDestroy:ZoneComponent', this.details.name);
+  }
 
 }

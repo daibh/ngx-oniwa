@@ -1,12 +1,13 @@
-import { Component, Input, OnInit, inject, signal } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ViewEncapsulation, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AnotationEvent, LoadEvent, PageEvent, PdfComponent, PdfService, ResourceEvent, RotationEvent, ZoomEvent } from '@daibh/pdf';
-import { DrawableLayerComponent, PdfThumbnailComponent, RectangleEvent } from '@daibh/pdf/components';
+import { DrawableLayerComponent, IRectangle, PdfThumbnailComponent, RectangleEvent } from '@daibh/pdf/components';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil, tap } from 'rxjs';
+import { ModalComponent } from '@daibh/material';
 
 const { loadingProgress } = LoadEvent;
-const { addRectangle } = RectangleEvent;
+const { addRectangle, fetchRectangles, fetchedRectangles } = RectangleEvent;
 const { prevPage, nextPage, pageChanged } = PageEvent;
 const { zoomIn, zoomOut } = ZoomEvent;
 const { rotateLeft, rotateRight } = RotationEvent;
@@ -21,17 +22,21 @@ const { rotateLeft, rotateRight } = RotationEvent;
     PdfComponent,
     DrawableLayerComponent,
     PdfThumbnailComponent,
-    FormsModule
-  ]
+    FormsModule,
+    ModalComponent
+  ],
+  encapsulation: ViewEncapsulation.None
 })
 export class PdfExampleComponent implements OnInit {
   private readonly _pdfService = inject(PdfService);
   private readonly _destroy$ = new Subject();
   readonly page = signal(1);
   readonly progress = signal({ loaded: 0, total: 0 });
+  readonly rectangles = signal<IRectangle[]>([]);
 
   @Input() lightSrc: string;
   @Input() heavySrc: string;
+  @ViewChild(ModalComponent, { static: true }) modalRef: ModalComponent;
 
   pdfSrc: string;
 
@@ -55,6 +60,15 @@ export class PdfExampleComponent implements OnInit {
       tap(data =>
         this.page.update(() => Number((data as { pageNumber: number })?.pageNumber || 1))
       )
+    ).subscribe();
+
+    this._pdfService.observe(fetchedRectangles).pipe(
+      takeUntil(this._destroy$),
+      tap(data => {
+        console.log('rectangles', data);
+        this.rectangles.set((data as { rectangles: IRectangle[] }).rectangles || []);
+        this.modalRef.open();
+      })
     ).subscribe();
   }
 
@@ -86,6 +100,13 @@ export class PdfExampleComponent implements OnInit {
           }
         }
       }
+    });
+  }
+
+  getRectangles(): void {
+    this._pdfService.dispatch({
+      name: fetchRectangles,
+      details: {}
     });
   }
 

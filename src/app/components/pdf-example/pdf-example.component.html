@@ -1,6 +1,8 @@
 <div class="toolbar hstack gap-1 d-flex">
   <button class="btn" (click)="addRectangle()">Add rectangle</button>
   <div class="vr"></div>
+  <button class="btn" (click)="getRectangles()">Get rectangles</button>
+  <div class="vr"></div>
   <div class="p-1">
     <button class="btn" (click)="zoomIn()">Zoom in</button>
     <button class="btn" (click)="zoomOut()">Zoom out</button>
@@ -37,3 +39,23 @@
   </div>
 </div>
 <ngx-drawable-layer></ngx-drawable-layer>
+<nw-modal #modal>
+  <div class="modal-body">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Title</th>
+          <th scope="col">Viewport</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let rectangle of rectangles(); index as idx">
+          <th scope="row">{{idx}}</th>
+          <td>{{rectangle.title}}</td>
+          <td>{{rectangle.viewport | json}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</nw-modal>
