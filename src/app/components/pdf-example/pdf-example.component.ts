@@ -65,7 +65,6 @@ export class PdfExampleComponent implements OnInit {
     this._pdfService.observe(fetchedRectangles).pipe(
       takeUntil(this._destroy$),
       tap(data => {
-        console.log('rectangles', data);
         this.rectangles.set((data as { rectangles: IRectangle[] }).rectangles || []);
         this.modalRef.open();
       })

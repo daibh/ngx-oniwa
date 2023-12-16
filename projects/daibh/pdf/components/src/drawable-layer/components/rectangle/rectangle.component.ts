@@ -1,9 +1,10 @@
 import { Component, DestroyRef, ElementRef, Input, OnInit, inject, signal } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { PdfService } from '@daibh/pdf';
-import { filter, fromEvent, map, merge, pairwise, switchMap, takeUntil, takeWhile, tap } from "rxjs";
+import { filter, fromEvent, map, merge, switchMap, takeUntil, takeWhile, tap } from "rxjs";
 import { IRectangle, IStyle, IViewport, ResizePosition, ResizeType } from "../../models/rectangle.model";
 import { RectangleEvent } from "../../models/event.model";
+import { equals, isDefined } from "@daibh/cdk/operators";
 const { removeRectangle, rectangleResized, rectangleMoved, rectangleSelected } = RectangleEvent;
 
 @Component({
@@ -51,6 +52,11 @@ export class RectangleComponent implements OnInit {
   private readonly _service: PdfService = inject(PdfService);
   private readonly _nativeElement: HTMLElement = inject(ElementRef).nativeElement;
   private readonly _ownerDocument = this._nativeElement.ownerDocument;
+  private readonly _events$ = this._service.events$.pipe(takeUntilDestroyed());
+  private readonly _observeEvents = [
+    rectangleSelected
+  ];
+
   private _mainContainer: HTMLDivElement;
   private _viewerContainer: HTMLDivElement;
   private _details: IRectangle;
@@ -150,7 +156,31 @@ export class RectangleComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.subscribeEvents();
     this.registSelfEvent();
+  }
+
+  private subscribeEvents(): void {
+    this._events$.pipe(
+      filter(_event => this._observeEvents.some(_obsEvent => _obsEvent === _event.name)),
+      tap(({ name, details }) => {
+        switch (name) {
+          case rectangleSelected:
+            const { rectangle } = details as { rectangle: IRectangle };
+            if(!isDefined(rectangle)) {
+              return;
+            }
+
+            if(!equals(rectangle.name, this.details.name, true)) {
+              this.details.selected = false;
+            }
+            
+            break;
+          default:
+            break;
+        }
+      })
+    ).subscribe();
   }
 
   private registSelfEvent(): void {
@@ -481,6 +511,9 @@ export class RectangleComponent implements OnInit {
       this.resizeType.set((evt.target as HTMLElement).dataset['position'] as ResizeType);
       return true;
     });
+
+    this.details.selected = true;
+    this._service.dispatch({ name: rectangleSelected, details: { rectangle: this.details, page: this.page } });
 
     evt.preventDefault();
     evt.stopPropagation();
