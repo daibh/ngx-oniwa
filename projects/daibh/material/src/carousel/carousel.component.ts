@@ -1,5 +1,5 @@
 import { NgFor, NgIf, NgTemplateOutlet } from "@angular/common";
-import { Component, DestroyRef, ElementRef, Input, NgZone, OnInit, afterNextRender, inject } from "@angular/core";
+import { Component, DestroyRef, ElementRef, Input, NgZone, OnInit, ViewEncapsulation, afterNextRender, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ICarouselConfig, ICarouselItem } from "./carousel.model";
 import { NW_CAROUSEL_CONFIG, defaultCarouselConfig } from "./carousel.config";
@@ -17,7 +17,8 @@ import { BehaviorSubject, interval, tap } from "rxjs";
     NgFor,
     NgTemplateOutlet
   ],
-  animations: [animationTrigger]
+  animations: [animationTrigger],
+  encapsulation: ViewEncapsulation.None
 })
 export class CarouselComponent implements OnInit {
   private readonly _ngZone: NgZone = inject(NgZone);

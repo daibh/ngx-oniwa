@@ -1,17 +1,18 @@
 import { Component, ElementRef, EventEmitter, Input, NgZone, Output, inject } from "@angular/core";
-import { IOffCanvasConfig, OffcanvasPosition } from "./offcanvas.model";
+import { IOffCanvasConfig, OffcanvasPosition, OffcanvasSize } from "./offcanvas.model";
 import { OffcanvasService } from "./offcanvas.service";
 import { NW_OFFCANVAS_CONFIG, defaultOffCanvasConfig } from "./offcanvas.config";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { tap } from "rxjs";
 import { withFallback } from "@daibh/cdk/operators";
+import { NgClass } from "@angular/common";
 
 @Component({
   selector: 'nw-offcanvas',
   templateUrl: './offcanvas.component.html',
   styleUrl: './offcanvas.component.scss',
   standalone: true,
-  imports: []
+  imports: [NgClass]
 })
 export class OffcanvasComponent {
   private readonly _ngZone: NgZone = inject(NgZone);
@@ -22,9 +23,15 @@ export class OffcanvasComponent {
   private _name: string = withFallback(this._config, 'name', defaultOffCanvasConfig);
   private _backdrop: boolean | 'static' = withFallback(this._config, 'backdrop', defaultOffCanvasConfig);
 
+  private _size: OffcanvasSize = '';
   private _position: OffcanvasPosition = 'start';
   private _title: string = '';
   private _opened: boolean = false;
+  private _customClass: string | string[] | Set<string> | { [klass: string]: unknown; } | null | undefined;
+
+  @Input() set size(value: OffcanvasSize) {
+    this._size = value;
+  }
 
   @Input() set position(value: OffcanvasPosition) {
     this._position = value;
@@ -39,7 +46,15 @@ export class OffcanvasComponent {
     this._switchOverflow(value);
   }
 
+  @Input() set customClass(value: string | string[] | Set<string> | { [klass: string]: unknown; } | null | undefined) {
+    this._customClass =  value;
+  }
+
   @Output() openedChange = new EventEmitter<boolean>();
+
+  get sizeSuffix(): string {
+    return this._size === '' ? '' : `-${this._size}`;
+  }
 
   get position(): OffcanvasPosition {
     return this._position || 'start';
@@ -47,6 +62,10 @@ export class OffcanvasComponent {
 
   get title(): string {
     return this._title || '';
+  }
+
+  get customClass(): string | string[] | Set<string> | { [klass: string]: unknown; } | null | undefined {
+    return this._customClass;
   }
 
   get backdrop(): boolean | 'static' {
@@ -91,6 +110,10 @@ export class OffcanvasComponent {
     if (newValue) {
       this.bodyElement.classList.add('overflow-hidden');
     }
+  }
+
+  toggle(): void {
+    this._ngZone.runOutsideAngular(() => this._offcanvasService.nextState(this._name, !this.opened));
   }
 
   open(): void {

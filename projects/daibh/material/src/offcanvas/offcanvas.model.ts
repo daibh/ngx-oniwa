@@ -1,3 +1,5 @@
+export type OffcanvasSize = '' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
+
 export type OffcanvasPosition = 'start' | 'end' | 'top' | 'bottom';
 
 export interface IOffCanvasSate {

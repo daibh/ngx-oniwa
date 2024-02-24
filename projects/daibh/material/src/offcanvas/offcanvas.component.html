@@ -1,4 +1,4 @@
-<div class="offcanvas offcanvas-{{position}}" [class.show]="opened" [class.hiding]="!opened" tabindex="-1">
+<div class="offcanvas{{sizeSuffix}} offcanvas-{{position}}" [ngClass]="customClass" [class.show]="opened" [class.hiding]="!opened" [tabindex]="!opened ? -1 : undefined">
   <div class="offcanvas-header">
     @if (title) {
       <h5 class="offcanvas-title">{{title}}</h5>
